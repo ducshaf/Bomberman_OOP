@@ -60,7 +60,7 @@ Xem comment ở starter project
 
 - Gói tùy chọn (tối đa +2đ)
 1. Nâng cấp thuật toán tìm đường cho Enemy +0.5đ
-   Cài đặt thêm các loại Enemy khác: +0.25đ cho mỗi loại enemy
+   Cài đặt thêm các loại Enemy khác: +0.25đ cho mỗi loại main.entities.enemy
 2. Cài đặt thuật toán AI cho Bomber (tự chơi) +1đ
 3. Xử lý hiệu ứng âm thanh (thêm music & sound effects) +1đ
 4. Phát triển hệ thống server-client để nhiều người có thể cùng chơi qua mạng LAN hoặc Internet +1đ

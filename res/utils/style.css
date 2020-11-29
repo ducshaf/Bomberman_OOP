@@ -1,0 +1,45 @@
+.button {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 50px;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-border-radius: 20px;
+}
+
+.button:hover {
+    -fx-border-color: aliceblue;
+}
+
+
+#menu {
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
+    -fx-background-color: transparent;
+    -fx-font-size: 20px;
+    -fx-border-color: white;
+    -fx-border-radius: 10px;
+}
+
+#resumeText {
+    -fx-font-size: 60px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, dimgray, 3, 1.0, 0, 0);
+}
+
+#pausePane {
+    -fx-pref-width: 1366;
+    -fx-pref-height: 768;
+    -fx-background-color: rgba(0,0,0,0.70);
+}
+#pausePane .button {
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 18px;
+    -fx-border-radius: 5px;
+}
+
+#pausePane > #soundButton {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
+}

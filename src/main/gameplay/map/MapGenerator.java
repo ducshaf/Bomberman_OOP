@@ -1,6 +1,7 @@
 package main.gameplay.map;
 
 import javafx.scene.image.Image;
+
 import main.GameManagement;
 import main.entities.Bomber;
 import main.entities.Grass;
@@ -8,7 +9,7 @@ import main.entities.Wall;
 
 import java.util.Random;
 
-public class RandomMapGenerator {
+public class MapGenerator {
     private static final int WIDTH = 15;
     private static final int HEIGHT = 11;
     private static int[][] map = new int[HEIGHT][WIDTH];
@@ -18,7 +19,6 @@ public class RandomMapGenerator {
     }
 
     public static void generateMap() {
-
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (i == 0 && j == 0) {
@@ -51,35 +51,7 @@ public class RandomMapGenerator {
                 }
             }
         }
-
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                switch (map[i][j]) { // -> adđ entity
-                    case 1: // Player
-                        GameManagement.entities.add(new Bomber(j, i, new Image("/player_down.png")));
-                        break;
-                    case 2: // Wall
-                        GameManagement.entities.add(new Wall(j, i, new Image("/wall.png")));
-                        break;
-                    case 3: // Standard enemy
-                        break;
-                    case 4: // Advance enemy
-                        break;
-                    case 5: // Ghost
-                        break;
-                    case 6: // Boss
-                        break;
-                    case 7: // AI Bomber?
-                        break;
-                    case 8: // box
-                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
-                        break;
-                    case 9: //box with power-ups
-                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
-                        break;
-                }
-            }
-        }
+        addEntities();
     }
 
     public static void makeGround(int y, int x) {
@@ -99,7 +71,7 @@ public class RandomMapGenerator {
 
     private static void verticalPathway(int y, int x) {
         for (int i = y - 2; i < y; i++) {
-            if (i > 0) {
+            if (i >= 0) {
                 map[i][x] = 0;
             }
         }
@@ -107,7 +79,7 @@ public class RandomMapGenerator {
 
     private static void horizontalPathway(int y, int x) {
         for (int i = x - 2; i < x; i++) {
-            if (i > 0) {
+            if (i >= 0) {
                 map[y][i] = 0;
             }
         }
@@ -123,4 +95,43 @@ public class RandomMapGenerator {
         }
     }
 
+    public static void addEntities() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                switch (map[i][j]) { // -> adđ entity
+                    case 1: // Player
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        GameManagement.mobileEntities.add(new Bomber(j, i, new Image("/player_down.png")));
+                        break;
+                    case 2: // Wall
+                        GameManagement.entities.add(new Wall(j, i, new Image("/wall.png")));
+                        break;
+                    case 3: // Standard enemy
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                    case 4: // Advance enemy
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                    case 5: // Ghost
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                    case 6: // Boss
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                    case 7: // AI Bomber?
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                    case 8: // box
+                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
+                        break;
+                    case 9: //box with power-ups
+                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
+                        break;
+                    default:
+                        GameManagement.entities.add(new Grass(j, i, null));
+                        break;
+                }
+            }
+        }
+    }
 }
