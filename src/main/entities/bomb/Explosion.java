@@ -3,7 +3,6 @@ package main.entities.bomb;
 import javafx.scene.image.Image;
 import main.GameManagement;
 import main.entities.Entity;
-import main.entities.Grass;
 
 public class Explosion extends Entity {
     public Explosion(int xUnit, int yUnit, Image img) {

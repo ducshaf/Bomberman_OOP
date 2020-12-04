@@ -2,6 +2,8 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import main.gui.App;
+import main.gui.UI;
 
 
 public class BombermanGame extends Application {
@@ -18,6 +20,7 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;
+        UI.init();
         App.init();
         primaryStage.setResizable(false);
         primaryStage.show();

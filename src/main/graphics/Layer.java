@@ -114,7 +114,7 @@ public class Layer {
     }
 
     public static void freezeTime() {
-        gc.setFill(Color.rgb(48, 255, 255, 0.5));
+        gc.setFill(Color.rgb(0, 165, 255, 0.3));
         gc.fillRect(0, 0, 1000, 768);
     }
 }

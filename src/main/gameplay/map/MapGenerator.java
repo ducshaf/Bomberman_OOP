@@ -3,11 +3,17 @@ package main.gameplay.map;
 import javafx.scene.image.Image;
 
 import main.GameManagement;
-import main.entities.Bomber;
-import main.entities.Grass;
-import main.entities.Wall;
+import main.entities.staticEntities.DestroyableWall;
+import main.entities.mobileEntities.Bomber;
+import main.entities.staticEntities.Grass;
+import main.entities.staticEntities.Wall;
+import main.entities.mobileEntities.Ghost;
+import main.entities.mobileEntities.Slime;
+import main.graphics.Sprite;
 
+import java.io.File;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MapGenerator {
     private static final int WIDTH = 15;
@@ -28,11 +34,11 @@ public class MapGenerator {
                 } else {
                     Random appearRate = new Random();
                     int rate = appearRate.nextInt(300);
-                    if (rate <= 40 && (i > 5 || j > 5)) { // 15 tile thì có 1 là enemy
+                    if (rate <= 40 && (i > 5 || j > 5)) { // 15 tile thì có 1 là mob
                         if (rate <= 15) {
-                            map[i][j] = 3;                  //set standard enemy
+                            map[i][j] = 3;                  //set standard mob
                         } else if (rate <= 25) {
-                            map[i][j] = 4;                  // set advanced enemy
+                            map[i][j] = 4;                  // set advanced mob
                         } else if (rate <= 30) {
                             map[i][j] = 5;                  // set ghost
                         } else if (rate <= 35){
@@ -41,7 +47,7 @@ public class MapGenerator {
                             map[i][j] = 7;                  //set evil bomber
                         }
 
-                        // set ground for enemy
+                        // set ground for mob
                         makeGround(i, j);
                     } else if (i > 1 || j > 1) {
                         if (rate > 250) {
@@ -50,6 +56,21 @@ public class MapGenerator {
                     }
                 }
             }
+        }
+        addEntities();
+    }
+
+    public static void inputMap() {
+        try {
+            File f = new File("F:\\PROJECT\\bomberman-starter\\res\\Level1.txt");
+            Scanner sc = new Scanner(f);
+            for (int i = 0; i < 11; i++) {
+                for (int j = 0; j < 15; j++) {
+                    map[i][j] = Integer.parseInt(sc.next().trim());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         addEntities();
     }
@@ -106,14 +127,16 @@ public class MapGenerator {
                     case 2: // Wall
                         GameManagement.entities.add(new Wall(j, i, new Image("/wall.png")));
                         break;
-                    case 3: // Standard enemy
+                    case 3: // Standard mob
                         GameManagement.entities.add(new Grass(j, i, null));
+                        GameManagement.mobileEntities.add(new Slime(j, i, Sprite.player_up));
                         break;
-                    case 4: // Advance enemy
+                    case 4: // Advance mob
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 5: // Ghost
                         GameManagement.entities.add(new Grass(j, i, null));
+                        GameManagement.mobileEntities.add(new Ghost(j, i, Sprite.ghost_down_0));
                         break;
                     case 6: // Boss
                         GameManagement.entities.add(new Grass(j, i, null));
@@ -122,10 +145,10 @@ public class MapGenerator {
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 8: // box
-                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
+                        GameManagement.entities.add(new DestroyableWall(j, i, new Image("/box.png")));
                         break;
                     case 9: //box with power-ups
-                        GameManagement.entities.add(new Grass(j, i, new Image("/box.png")));
+                        GameManagement.entities.add(new DestroyableWall(j, i, new Image("/box.png")));
                         break;
                     default:
                         GameManagement.entities.add(new Grass(j, i, null));

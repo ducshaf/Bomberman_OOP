@@ -1,10 +1,9 @@
 package main.entities.bomb;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import main.GameManagement;
 import main.entities.Entity;
-import main.entities.Wall;
+import main.entities.staticEntities.Wall;
 
 import java.util.ArrayList;
 
@@ -20,6 +19,10 @@ public class Bomb extends Entity {
         */
         super(xUnit, yUnit, img);
         this.bombLevel = bombLevel;
+    }
+
+    public int getBombLevel() {
+        return bombLevel;
     }
 
     @Override
