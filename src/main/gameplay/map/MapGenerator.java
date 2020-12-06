@@ -62,7 +62,7 @@ public class MapGenerator {
 
     public static void inputMap() {
         try {
-            File f = new File("F:\\PROJECT\\bomberman-starter\\res\\Level1.txt");
+            File f = new File("C:\\Users\\Admin\\IdeaProjects\\Bomberman_OOP_4\\res\\Level1.txt");
             Scanner sc = new Scanner(f);
             for (int i = 0; i < 11; i++) {
                 for (int j = 0; j < 15; j++) {

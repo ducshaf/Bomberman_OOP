@@ -7,6 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
+import main.Input.InputManager;
 import main.entities.Entity;
 import main.gameplay.map.MapGenerator;
 import main.graphics.Layer;
@@ -105,7 +106,7 @@ public class GameManagement {
         root.getChildren().addAll(c, UI.menu);
         gc = c.getGraphicsContext2D();
         Layer.setGraphicsContext(gc);
-
+        InputManager.keyboardHandle(s);
         // generate a random map.
         MapGenerator.inputMap();
         // start game loop.
