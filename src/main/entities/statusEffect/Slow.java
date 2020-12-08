@@ -9,6 +9,10 @@ public class Slow extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public Slow() {
+
+    }
+
     @Override
     public void init() {
         duration += 300;

@@ -2,18 +2,39 @@ package main.entities.mobileEntities;
 
 import javafx.scene.image.Image;
 import main.GameManagement;
-import main.Input.InputManager;
+import main.entities.bomb.Bomb;
+import main.entities.statusEffect.*;
+import main.gameplay.inputHandler.InputManager;
 import main.entities.AnimatedEntity;
+import main.graphics.Layer;
 import main.graphics.Sprite;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bomber extends AnimatedEntity {
     protected boolean alive = true;
     protected int direction;
     protected double speed;
+    protected int bombQuality;
+    protected int bombQuantity;
+    protected int lives = 3;
+    protected Map<String, StatusEffect> status = new HashMap<>();
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         speed = 1;
+        bombQuality = 1;
+        bombQuantity = 4;
+        status.put("blind", new Blind());
+        status.put("fierce", new FierceBomb());
+        status.put("freeze", new FreezeTime());
+        status.put("invert", new Inversion());
+        status.put("invincible", new Invincibility());
+        status.put("percolate", new Percolate());
+        status.put("slow", new Slow());
+        status.put("force", new TheForce());
+        status.put("time", new TimeBomb());
     }
 
     /***********************************************************************************
@@ -21,20 +42,57 @@ public class Bomber extends AnimatedEntity {
      ***********************************************************************************/
     @Override
     public void update() {
-        img = chooseImage(direction);
-        if (!alive) {
-            chooseImage(-1);
+        if (killed) {
+            if (invulTime == 120) {
+                System.out.println("lives--");
+                lives--;
+            }
+            invulTimer();
         }
-        else {
+        if (lives == 0) {
+            System.out.println("died");
+            isAlive = false;
+        }
+        if (isAlive) {
             calculateMove();
-            chooseImage(direction);
+            img = chooseImage(direction);
+            if (InputManager.isSpace()) {
+                setBomb();
+                InputManager.setSpace();
+            }
+
+            updateStatus();
         }
     }
 
     /***********************************************************************************
      * Bomber ability
      ***********************************************************************************/
+    public void setBomb() {
+        if (GameManagement.bombs.size() < bombQuantity) {
+            GameManagement.bombs.add(new Bomb(setBombTileX(), setBombTileY(),
+                    new Image("./sprites/power-ups/fierce_bomb.png"), bombQuality));
+        }
+    }
 
+    public void updateStatus() {
+        StatusEffect blind = status.get("blind");
+        if (InputManager.isF1()) {
+            blind.init();
+            GameManagement.isBlind = true;
+        }
+        if (blind.isActive()) {
+            blind.update();
+        } else GameManagement.isBlind = false;
+
+        StatusEffect fierce = status.get("fierce");
+        if (InputManager.isF2()) {
+            fierce.init();
+        }
+        if (fierce.isActive()) {
+            fierce.update();
+        }
+    }
 
     /***********************************************************************************
      * Bomber movement
@@ -67,19 +125,19 @@ public class Bomber extends AnimatedEntity {
     public void calculateMove() {
         double mX = 0, mY = 0;
         if (InputManager.isLeft()) {
-            mX = - 2* speed;
+            mX = - 1.6 * speed;
             animate();
         }
         if (InputManager.isRight()) {
-            mX =  2* speed;
+            mX =  1.6 * speed;
             animate();
         }
         if (InputManager.isUp()) {
-            mY = -2 *speed;
+            mY = -1.6 *speed;
             animate();
         }
         if (InputManager.isDown()) {
-            mY = 2 * speed;
+            mY = 1.6 * speed;
             animate();
         }
 
@@ -103,25 +161,25 @@ public class Bomber extends AnimatedEntity {
             return false;
         }
         if (direction == 1 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
-        collide(GameManagement.getStaticEntityAt(bl_x, bl_y))
+                collide(GameManagement.getStaticEntityAt(bl_x, bl_y))
         ) {
             return false;
         }
 
         if (direction == 2 && collide(GameManagement.getStaticEntityAt(tr_x, tr_y)) ||
-        collide(GameManagement.getStaticEntityAt(br_x, br_y))
+                collide(GameManagement.getStaticEntityAt(br_x, br_y))
         ) {
             return false;
         }
 
         if (direction == 3 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
-        collide(GameManagement.getStaticEntityAt(tr_x, tr_y))
+                collide(GameManagement.getStaticEntityAt(tr_x, tr_y))
         ) {
             return false;
         }
 
         if (direction == 4 && collide(GameManagement.getStaticEntityAt(bl_x, bl_y)) ||
-        collide(GameManagement.getStaticEntityAt(br_x, br_y))
+                collide(GameManagement.getStaticEntityAt(br_x, br_y))
         ) {
             return false;
         }
@@ -154,5 +212,41 @@ public class Bomber extends AnimatedEntity {
                 return Sprite.getMoveSprite(Sprite.player_down, Sprite.player_down_1,
                         Sprite.player_down_2, get_animate(), 24);
         }
+    }
+
+
+    /***********************************************************************************
+     * Utilities
+     ***********************************************************************************/
+    public int getBombQuality() {
+        return bombQuality;
+    }
+
+    public void setBombQuality(int bombQuality) {
+        this.bombQuality = bombQuality;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public int getBombQuantity() {
+        return bombQuantity;
+    }
+
+    public void setBombQuantity(int bombQuantity) {
+        this.bombQuantity = bombQuantity;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 }

@@ -8,6 +8,9 @@ public class FierceBomb extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public FierceBomb() {
+    }
+
     @Override
     public void init() {
         duration += 600;

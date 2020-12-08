@@ -7,7 +7,7 @@ import main.graphics.Sprite;
 public class Ghost extends Enemy {
     private AI ghost = new AI();
     public Ghost(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img, 0.4);
+        super(xUnit, yUnit, img, 1.6);
     }
 
     @Override

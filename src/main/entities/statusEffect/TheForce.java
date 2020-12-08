@@ -8,6 +8,10 @@ public class TheForce extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public TheForce() {
+
+    }
+
     @Override
     public void init() {
         duration += 600;

@@ -8,6 +8,10 @@ public class Inversion extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public Inversion() {
+
+    }
+
     @Override
     public void init() {
         duration += 600;

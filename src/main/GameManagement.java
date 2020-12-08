@@ -7,7 +7,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
-import main.Input.InputManager;
+import main.entities.staticEntities.Grass;
+import main.gameplay.inputHandler.InputManager;
 import main.entities.Entity;
 import main.gameplay.map.MapGenerator;
 import main.graphics.Layer;
@@ -15,7 +16,8 @@ import main.gui.App;
 import main.gui.UI;
 import main.utils.Utils;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Vector;
 
 
@@ -26,9 +28,6 @@ public class GameManagement {
     static Canvas c;
     static GraphicsContext gc;
 
-    public static final int CANVAS_WIDTH = 1366;
-    public static final int CANVAS_HEIGHT = 768;
-
     private static AnimationTimer timer;
     private static long currentGameTime = 0;
     private static long startNanoTime;
@@ -36,10 +35,17 @@ public class GameManagement {
 
     public static Vector<Entity> entities = new Vector<>();
     public static Vector<Entity> mobileEntities = new Vector<>();
-    public static ArrayList<Entity> bombs = new ArrayList<>();
+    public static Vector<Entity> bombs = new Vector<>();
+
+    public static boolean isBlind = false;
+    public static boolean isFreeze = false;
 
     public static GraphicsContext getGraphicsContext() {
         return gc;
+    }
+
+    public static Entity getPlayer() {
+        return mobileEntities.get(0);
     }
 
     public static Entity getStaticEntityAt(double x, double y) {
@@ -71,7 +77,7 @@ public class GameManagement {
                     }
                 }
                 if (!isPaused){
-                    gc.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    gc.clearRect(0, 0, Utils.WIDTH, Utils.HEIGHT);
                     update();
                     render();
                 }
@@ -85,20 +91,43 @@ public class GameManagement {
         Layer.drawGroundLayer();
         Layer.drawMobileLayer(entities);
         Layer.drawMobileLayer(mobileEntities);
+        Layer.drawMobileLayer(bombs);
         Layer.drawOverlay();
+        if (isBlind) Layer.blind();
+        if (isFreeze) Layer.freezeTime();
     }
 
 // update game logic, xử lí input từ bàn phím, update entities.
     public static void update() {
-        for (Entity e : mobileEntities) {
-            e.update();
+        for (Iterator<Entity> e = bombs.iterator(); e.hasNext();) {
+            Entity bomb = e.next();
+            bomb.update();
+            if (!bomb.isAlive()) {
+                e.remove();
+            }
+        }
+
+        for (Iterator<Entity> e = mobileEntities.iterator(); e.hasNext();) {
+            Entity mob = e.next();
+            mob.update();
+            if (!mob.isAlive()) {
+                e.remove();
+            }
+        }
+
+        for (ListIterator<Entity> e = entities.listIterator(); e.hasNext();) {
+            Entity staticEntity = e.next();
+            staticEntity.update();
+            if (!staticEntity.isAlive()) {
+                e.set(new Grass(staticEntity.getTileX(), staticEntity.getTileY(), null));
+            }
         }
     }
 
     public static void init() {
         root = new Group();
-        s = new Scene(root, CANVAS_WIDTH, CANVAS_HEIGHT);
-        c = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+        s = new Scene(root, Utils.WIDTH, Utils.HEIGHT);
+        c = new Canvas(Utils.WIDTH, Utils.HEIGHT);
         isPaused = false;
 
         s.getStylesheets().add("./utils/style.css");

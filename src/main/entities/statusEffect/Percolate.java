@@ -10,6 +10,10 @@ public class Percolate extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public Percolate() {
+
+    }
+
     @Override
     public void init() {
         duration += 600;

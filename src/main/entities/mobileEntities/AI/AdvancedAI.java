@@ -9,8 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static java.lang.Math.abs;
 
@@ -19,35 +17,36 @@ public class AdvancedAI extends AI {
     final static int COL = 15;
 
     private cell[][] cells = new cell[ROW][COL];
-
     protected Entity enemy;
     private Stack<Pair> path = new Stack<>();
     Pair nextMove;
     boolean reachable = false;
-    int cooldown = 30; // ~15s
+    int cooldown = 5;
 
     public AdvancedAI(Entity e) {
         super();
         enemy = e;
+        cooldown += GameManagement.mobileEntities.indexOf(e);
     }
 
     public int calculateDirection() {
         // Create a parallel thread to aStarSearch for path to player when cd is down or reach old goal.
         //
-        if (path == null || cooldown == 30) {
-            ExecutorService es = Executors.newSingleThreadExecutor();
-            es.execute(new Runnable() {
-                @Override
-                public void run() {
-                    aStarSearch(new Pair(enemy.getTileX(), enemy.getTileY()), new Pair(0, 0));
-                }
-            });
-            es.shutdown();
+        if (cooldown == 5) {
+            path.clear();
+            nextMove = null;
+            aStarSearch(new Pair(enemy.getTileX(), enemy.getTileY()),
+                    new Pair(GameManagement.getPlayer().getTileX(), GameManagement.getPlayer().getTileY()));
+
+            if (path.size() == 1) return randomDirection();
         }
+
         // aStarSearch have a cd of ~15s (dont know how it's 15s but oh well :v)
         if (cooldown > 0) {
             cooldown--;
-        } else cooldown = 30;
+        } else {
+            cooldown = 5;
+        }
 
         // if aStarSearch return a path to goal
         if (reachable) {
@@ -64,32 +63,34 @@ public class AdvancedAI extends AI {
             if (enemy.getX() == x && enemy.getY() == y) {
                 if (!path.isEmpty()) {
                     setNextMove();
-                } else {
-                    cooldown = 30;
-                    reachable = false;
+                    return 0;
                 }
             }
 
             // set direction
             // sometimes this doesnt work (return randomDirection()) bcz cd is down and aStarSearch start.
             // but it still reached goal in the end so IT'S NOT A BUG, IT'S A FEATURE!
-            if (enemy.getX() > x) {
-                // set direction to left
-                return Utils.LEFT;
+            // FIXED!
+            if (enemy.getY() == y) {
+                if (enemy.getX() > x) {
+                    // set direction to left
+                    return Utils.LEFT;
+                }
+                if (enemy.getX() < x) {
+                    // set direction to right
+                    return Utils.RIGHT;
+                }
             }
-            if (enemy.getX() < x) {
-                // set direction to right
-                return Utils.RIGHT;
+            if (enemy.getX() == x) {
+                if (enemy.getY() > y) {
+                    // set direction to up
+                    return Utils.UP;
+                }
+                if (enemy.getY() < y) {
+                    // set direction to down
+                    return Utils.DOWN;
+                }
             }
-            if (enemy.getY() > y) {
-                // set direction to up
-                return Utils.UP;
-            }
-            if (enemy.getY() < y) {
-                // set direction to down
-                return Utils.DOWN;
-            }
-            return 0;
         }
         // else return a random direction.
         return randomDirection();
@@ -115,18 +116,25 @@ public class AdvancedAI extends AI {
         return (abs(des.x - x) + abs(des.y - y));
     }
 
-    void tracePath(cell[][] cellDetails, Pair des) {
+    void tracePath(cell[][] cellDetails, Pair des, Pair src) {
         int col = des.x;
         int row = des.y;
 
         path.clear();
         // go through cell[][], iterate from goal back to source and push to stack.
-        while (col != cellDetails[row][col].parent_j || row != cellDetails[row][col].parent_i) {
+        while (col != src.x || row != src.y) {
             path.push(new Pair(col, row));
             int newCol = cellDetails[row][col].parent_j;
             int newRow = cellDetails[row][col].parent_i;
             row = newRow;
             col = newCol;
+            // Gặp lỗi có lúc sẽ lặp đi lặp lại 2 pair liên tục dẫn đến out of memory ở heap
+            // K bt sửa thế nào nên bh tạm hạn chế số pair đc push vô stack
+            // FIXED do hàm aStarSearch có 1 đoạn code nhầm dấu...
+            if (path.size() > 50) {
+                System.out.println("bug");
+                break;
+            }
         }
         path.push(new Pair(col, row));
     }
@@ -146,18 +154,17 @@ public class AdvancedAI extends AI {
     }
 
     public void aStarSearch(Pair src, Pair des) {
-        int[][] map = getMap();
+        if (isDestination(src.x, src.y, des)) {
+            reachable = false;
+            return;
+        }
         if (!isValid(src.x, src.y) || !isValid(des.x, des.y)) {
             reachable = false;
             return;
         }
+        int[][] map = getMap();
 
         if (isBlocked(src.x, src.y, map) || isBlocked(des.x, des.y, map)) {
-            reachable = false;
-            return;
-        }
-
-        if (isDestination(src.x, src.y, des)) {
             reachable = false;
             return;
         }
@@ -196,7 +203,7 @@ public class AdvancedAI extends AI {
                     cells[i-1][j].parent_i = i;
 
                     reachable = true;
-                    tracePath(cells, des);
+                    tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i - 1][j] && !isBlocked(j,i-1, map)) {
                     gNew = cells[i-1][j].g + 1;
@@ -215,12 +222,12 @@ public class AdvancedAI extends AI {
             }
             //South
             if (isValid(j, i + 1)) {
-                if (isDestination(j, i-1, des)) {
+                if (isDestination(j, i+1, des)) {
                     cells[i+1][j].parent_j = j;
                     cells[i+1][j].parent_i = i;
 
                     reachable = true;
-                    tracePath(cells, des);
+                    tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i + 1][j] && !isBlocked(j,i+1, map)) {
                     gNew = cells[i+1][j].g + 1;
@@ -245,7 +252,7 @@ public class AdvancedAI extends AI {
                     cells[i][j-1].parent_i = i;
 
                     reachable = true;
-                    tracePath(cells, des);
+                    tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i][j - 1] && !isBlocked(j-1,i, map)) {
                     gNew = cells[i][j-1].g + 1;
@@ -270,7 +277,7 @@ public class AdvancedAI extends AI {
                     cells[i][j+1].parent_i = i;
 
                     reachable = true;
-                    tracePath(cells, des);
+                    tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i][j + 1] && !isBlocked(j+1,i, map)) {
                     gNew = cells[i][j+1].g + 1;

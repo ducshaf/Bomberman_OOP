@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import main.GameManagement;
 import main.graphics.Layer;
+import main.utils.Utils;
 
 public class UI {
     public static Button menu;
@@ -28,7 +29,7 @@ public class UI {
 
     public static void initPane() {
         pause = new Pane();
-        Canvas canvas = new Canvas(GameManagement.CANVAS_WIDTH, GameManagement.CANVAS_HEIGHT);
+        Canvas canvas = new Canvas(Utils.WIDTH, Utils.HEIGHT);
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         Layer.drawOptionUI(graphicsContext);
 

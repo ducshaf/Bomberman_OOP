@@ -8,6 +8,10 @@ public class FreezeTime extends StatusEffect {
         super(xUnit, yUnit, new Image("./sprites/power-ups/blind_debuff.png"));
     }
 
+    public FreezeTime() {
+
+    }
+
     @Override
     public void init() {
         duration += 600;

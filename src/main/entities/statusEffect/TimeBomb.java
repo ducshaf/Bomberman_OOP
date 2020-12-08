@@ -8,6 +8,10 @@ public class TimeBomb extends StatusEffect{
         super(xUnit, yUnit, img);
     }
 
+    public TimeBomb() {
+
+    }
+
     @Override
     public void init() {
         duration += 600;

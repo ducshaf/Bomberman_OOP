@@ -6,10 +6,10 @@ import main.entities.AnimatedEntity;
 import main.utils.Utils;
 
 public abstract class Enemy extends AnimatedEntity {
-    protected boolean alive = true;
     protected int direction;
     protected double speed;
     protected boolean changeDirection = false;
+    protected int death_animate = 60;
 
     public Enemy(int xUnit, int yUnit, Image img, double speed) {
         super(xUnit, yUnit, img);
@@ -17,12 +17,15 @@ public abstract class Enemy extends AnimatedEntity {
     }
 
     public void update() {
-        animate();
-        img = chooseImage(direction);
-        if (!alive) {
-            chooseImage(-1);
+        if (killed) {
+            if (death_animate > 0) {
+                animate();
+                img = chooseImage(-1);
+                death_animate--;
+            } else isAlive = false;
         } else {
-            chooseImage(direction);
+            animate();
+            img = chooseImage(direction);
             move();
         }
     }
@@ -81,10 +84,6 @@ public abstract class Enemy extends AnimatedEntity {
             return false;
         }
         return true;
-    }
-
-    public boolean is_alive() {
-        return alive;
     }
 
     public abstract Image chooseImage(int id);

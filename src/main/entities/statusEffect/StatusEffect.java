@@ -12,6 +12,10 @@ public abstract class StatusEffect extends Entity {
         super(xUnit, yUnit, img);
     }
 
+    public StatusEffect() {
+        super();
+    }
+
     public abstract void init();
 
     public int getDuration() {

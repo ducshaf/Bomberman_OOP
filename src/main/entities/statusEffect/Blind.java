@@ -11,9 +11,13 @@ public class Blind extends StatusEffect {
         super(xUnit, yUnit, img);
     }
 
+    public Blind() {
+
+    }
+
     @Override
     public void init() {
-        duration += 300;
+        duration += 30;
         isActive = true;
     }
 
@@ -21,8 +25,8 @@ public class Blind extends StatusEffect {
     public void update() {         // 5s
         if (duration > 0) {
             --duration;
-            Layer.blind();
-        } else if (isActive) {
+            System.out.println(duration);
+        } else {
             isActive = false;
         }
     }

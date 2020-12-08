@@ -95,4 +95,23 @@ public class Sprite {
 		}
 		return x3;
 	}
+
+	public static Image getMoveSprite(Image x0, Image x1, Image x2, Image x3, Image x4, int animate, int time) {
+		int calc = animate % time;
+		int diff = time / 5;
+
+		if (calc < diff) {
+			return x0;
+		}
+		if (calc < diff*2) {
+			return x1;
+		}
+		if (calc < diff*3) {
+			return x2;
+		}
+		if (calc < diff*4) {
+			return x3;
+		}
+		return x4;
+	}
 }
