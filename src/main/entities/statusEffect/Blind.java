@@ -16,7 +16,7 @@ public class Blind extends StatusEffect {
     }
 
     @Override
-    public void init() {
+    public void init(int i) {
         duration += 30;
         isActive = true;
     }

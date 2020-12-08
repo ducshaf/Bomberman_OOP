@@ -16,7 +16,7 @@ public abstract class StatusEffect extends Entity {
         super();
     }
 
-    public abstract void init();
+    public abstract void init(int i);
 
     public int getDuration() {
         return duration;

@@ -78,8 +78,10 @@ public class Bomber extends AnimatedEntity {
     public void updateStatus() {
         StatusEffect blind = status.get("blind");
         if (InputManager.isF1()) {
-            blind.init();
-            GameManagement.isBlind = true;
+            if (!blind.isActive()){
+                blind.init(0);
+                GameManagement.isBlind = true;
+            }
         }
         if (blind.isActive()) {
             blind.update();
@@ -87,11 +89,16 @@ public class Bomber extends AnimatedEntity {
 
         StatusEffect fierce = status.get("fierce");
         if (InputManager.isF2()) {
-            fierce.init();
+            if (!fierce.isActive()){
+                fierce.init(bombQuality);
+                bombQuality = 15;
+            }
         }
         if (fierce.isActive()) {
             fierce.update();
-        }
+        } else bombQuality = ((FierceBomb) fierce).getOldBombLevel();
+
+        StatusEffect freeze =
     }
 
     /***********************************************************************************

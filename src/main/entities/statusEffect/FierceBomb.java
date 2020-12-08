@@ -12,10 +12,12 @@ public class FierceBomb extends StatusEffect {
     }
 
     @Override
-    public void init() {
+    public void init(int oldBombLevel) {
         duration += 600;
         isActive = true;
-        // set old bomb level if player's bomb level is not 99.
+        if (oldBombLevel != 15){
+            this.oldBombLevel = oldBombLevel;
+        }
     }
 
     @Override
@@ -27,5 +29,9 @@ public class FierceBomb extends StatusEffect {
             isActive = false;
             // set bomb level to old bomblevel.
         }
+    }
+
+    public int getOldBombLevel() {
+        return oldBombLevel;
     }
 }
