@@ -13,4 +13,12 @@ public class Utils {
     public static double getPreciseDouble(double x) {
         return Math.round(x * 10000) / 10000.0;
     }
+
+    public static int getTileX(double x) {
+        return (int) (Utils.getPreciseDouble(x/1.6 - 32*2)/32);
+    }
+
+    public static int getTileY(double y) {
+        return (int) (Utils.getPreciseDouble(y/1.6 - 32*3)/32);
+    }
 }

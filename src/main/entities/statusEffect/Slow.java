@@ -1,24 +1,25 @@
 package main.entities.statusEffect;
 
-import javafx.scene.image.Image;
-import main.graphics.Layer;
+import main.entities.mobileEntities.Bomber;
+import main.graphics.Sprite;
 
 public class Slow extends StatusEffect {
     double playerSpeed;
-    public Slow(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+    public Slow(int xUnit, int yUnit) {
+        super(xUnit, yUnit, Sprite.slow);
     }
 
-    public Slow() {
-
+    public Slow(Bomber bomber) {
+        super(bomber);
     }
 
     @Override
     public void init() {
-        duration += 300;
+        duration += 600;
         isActive = true;
-        // set playerSpeed
-        // set player speed to half
+        playerSpeed = player.getSpeed();
+        player.setSpeed(0.5);
+        System.out.println("slow down");
     }
 
     @Override
@@ -27,7 +28,7 @@ public class Slow extends StatusEffect {
             --duration;
         } else if (isActive) {
             isActive = false;
-            // return player speed with playerSpeed
+            player.setSpeed(playerSpeed);
         }
     }
 

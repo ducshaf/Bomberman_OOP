@@ -1,37 +1,32 @@
 package main.entities.statusEffect;
 
 import javafx.scene.image.Image;
+import main.entities.mobileEntities.Bomber;
+import main.graphics.Sprite;
 
 public class FierceBomb extends StatusEffect {
-    int oldBombLevel;
-    public FierceBomb(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+    public FierceBomb(int xUnit, int yUnit) {
+        super(xUnit, yUnit, Sprite.fierce);
     }
 
-    public FierceBomb() {
+    public FierceBomb(Bomber bomber) {
+        super(bomber);
     }
 
     @Override
-    public void init(int oldBombLevel) {
+    public void init() {
         duration += 600;
         isActive = true;
-        if (oldBombLevel != 15){
-            this.oldBombLevel = oldBombLevel;
-        }
+        player.isfierce = true;
     }
 
     @Override
     public void update() {         // 5s
         if (duration > 0) {
             --duration;
-            // increase bomb level to 99
         } else if (isActive) {
             isActive = false;
-            // set bomb level to old bomblevel.
+            player.isfierce = false;
         }
-    }
-
-    public int getOldBombLevel() {
-        return oldBombLevel;
     }
 }

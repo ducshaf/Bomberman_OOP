@@ -5,7 +5,6 @@ import main.GameManagement;
 import main.entities.AnimatedEntity;
 import main.entities.Entity;
 import main.entities.staticEntities.DestroyableWall;
-import main.entities.staticEntities.Grass;
 
 public class Explosion extends Entity {
     public Explosion(int xUnit, int yUnit, Image img) {
@@ -29,5 +28,9 @@ public class Explosion extends Entity {
                 if (!b.isExploded()) b.explode();
             }
         }
+    }
+
+    public boolean collide(Entity e) {
+        return false;
     }
 }

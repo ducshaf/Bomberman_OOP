@@ -1,23 +1,29 @@
 package main.entities.statusEffect;
 
-import javafx.scene.image.Image;
-import main.graphics.Layer;
+import main.entities.mobileEntities.Bomber;
+import main.graphics.Sprite;
 
 public class Percolate extends StatusEffect {
-    // pass through block.
-    // Sửa code chỗ grid của player, nếu cái này !isActive thì mới đi qua đc
-    public Percolate(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+    double x = 0;
+    double y = 0;
+    public Percolate(int xUnit, int yUnit) {
+        super(xUnit, yUnit, Sprite.percolate);
     }
 
-    public Percolate() {
-
+    public Percolate(Bomber bomber) {
+        super(bomber);
     }
 
     @Override
     public void init() {
         duration += 600;
+        if (!isActive) {
+            x = player.getX();
+            y = player.getY();
+        }
+        player.ispercolate = true;
         isActive = true;
+        System.out.println("percolation start..." + player.getX() +  player.getY());
     }
 
     @Override
@@ -26,6 +32,11 @@ public class Percolate extends StatusEffect {
             --duration;
         } else if (isActive) {
             isActive = false;
+            player.ispercolate = false;
+            if (!player.canMove(player.getX(), player.getY())) {
+                player.setX(x);
+                player.setY(y);
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 package main.gui;
 
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -13,10 +11,14 @@ import main.utils.Utils;
 public class UI {
     public static Button menu;
     public static Pane pause;
+    public static Pane gameOver;
+    public static Pane victory;
 
     public static void init() {
         intButton();
-        initPane();
+        initPausePane();
+        initGameOver();
+        initVictory();
     }
 
     public static void intButton() {
@@ -24,14 +26,14 @@ public class UI {
         menu.setLayoutX(1260);
         menu.setLayoutY(40);
         menu.setId("menu");
-        menu.setOnAction(actionEvent -> GameManagement.pause());
+        menu.setOnAction(actionEvent -> GameManagement.pause(0));
     }
 
-    public static void initPane() {
+    public static void initPausePane() {
         pause = new Pane();
         Canvas canvas = new Canvas(Utils.WIDTH, Utils.HEIGHT);
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        Layer.drawOptionUI(graphicsContext);
+        Layer.drawOptionUI(graphicsContext, "pause");
 
         pause.setId("pausePane");
         pause.setOnMouseReleased(mouseEvent -> {
@@ -69,5 +71,56 @@ public class UI {
         });
 
         pause.getChildren().addAll(canvas, sound, resume, restart, mainMenu);
+    }
+
+    public static void initGameOver() {
+        gameOver = new Pane();
+        Canvas canvas = new Canvas(Utils.WIDTH, Utils.HEIGHT);
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        Layer.drawOptionUI(graphicsContext, "gameOver");
+
+        gameOver.setId("pausePane");
+
+        Button restart = new Button("Restart");
+        restart.setLayoutX(605);
+        restart.setLayoutY(405);
+        restart.setOnAction(actionEvent -> {
+            GameManagement.reset();
+        });
+
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setLayoutX(605);
+        mainMenu.setLayoutY(455);
+        mainMenu.setOnAction(actionEvent -> {
+            GameManagement.exit();
+        });
+
+        gameOver.getChildren().addAll(canvas, restart, mainMenu);
+    }
+
+    public static void initVictory() {
+        victory = new Pane();
+        Canvas canvas = new Canvas(Utils.WIDTH, Utils.HEIGHT);
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        Layer.drawOptionUI(graphicsContext, "victory");
+
+        victory.setId("pausePane");
+
+        Button restart = new Button("Choose Stage");
+        restart.setLayoutX(605);
+        restart.setLayoutY(405);
+        restart.setOnAction(actionEvent -> {
+            GameManagement.exit();
+            App.root.getChildren().add(App.chooseStage);
+        });
+
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setLayoutX(605);
+        mainMenu.setLayoutY(455);
+        mainMenu.setOnAction(actionEvent -> {
+            GameManagement.exit();
+        });
+
+        victory.getChildren().addAll(canvas, restart, mainMenu);
     }
 }

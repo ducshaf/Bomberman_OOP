@@ -2,39 +2,51 @@ package main.entities.mobileEntities;
 
 import javafx.scene.image.Image;
 import main.GameManagement;
+import main.entities.Entity;
 import main.entities.bomb.Bomb;
 import main.entities.statusEffect.*;
 import main.gameplay.inputHandler.InputManager;
 import main.entities.AnimatedEntity;
-import main.graphics.Layer;
 import main.graphics.Sprite;
+import main.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Bomber extends AnimatedEntity {
-    protected boolean alive = true;
-    protected int direction;
-    protected double speed;
-    protected int bombQuality;
-    protected int bombQuantity;
-    protected int lives = 3;
-    protected Map<String, StatusEffect> status = new HashMap<>();
+    public int direction;
+    public static double speed;
+    public static int bombQuality;
+    public static int bombQuantity;
+    public static int lives = 3;
+    public static Map<String, StatusEffect> status = new HashMap<>();
+
+    public boolean isinvul = false;
+    public boolean ispercolate = false;
+    public boolean isforceuser = false;
+    public boolean isfierce = false;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
-        speed = 1;
+        speed = 0.8;
         bombQuality = 1;
-        bombQuantity = 4;
-        status.put("blind", new Blind());
-        status.put("fierce", new FierceBomb());
-        status.put("freeze", new FreezeTime());
-        status.put("invert", new Inversion());
-        status.put("invincible", new Invincibility());
-        status.put("percolate", new Percolate());
-        status.put("slow", new Slow());
-        status.put("force", new TheForce());
-        status.put("time", new TimeBomb());
+        bombQuantity = 1;
+        lives = 3;
+        status.clear();
+        status.put("blind", new Blind(this));
+        status.put("fierce", new FierceBomb(this));
+        status.put("freeze", new FreezeTime(this));
+        status.put("invert", new Inversion(this));
+        status.put("invincible", new Invincibility(this));
+        status.put("percolate", new Percolate(this));
+        status.put("slow", new Slow(this));
+        status.put("force", new TheForce(this));
+        status.put("time", new TimeBomb(this));
+        status.put("heal", new Heal(this));
+        status.put("agile", new Agile(this));
+        status.put("increaseBLvl", new IncrementBombLevel(this));
+        status.put("increaseBNum", new IncrementBombNumber(this));
+        status.put("random", new Random(this));
     }
 
     /***********************************************************************************
@@ -44,19 +56,23 @@ public class Bomber extends AnimatedEntity {
     public void update() {
         if (killed) {
             if (invulTime == 120) {
-                System.out.println("lives--");
-                lives--;
+                System.out.println(lives + " lives-- " + getX() + "," + getY());
+                if (!isinvul) {
+                    lives--;
+                }
             }
             invulTimer();
         }
         if (lives == 0) {
-            System.out.println("died");
+            System.out.println("died" + direction);
             isAlive = false;
         }
         if (isAlive) {
             calculateMove();
+            collideEnemy();
+            pickUpPowerup();
             img = chooseImage(direction);
-            if (InputManager.isSpace()) {
+            if (InputManager.isSetBomb()) {
                 setBomb();
                 InputManager.setSpace();
             }
@@ -71,7 +87,7 @@ public class Bomber extends AnimatedEntity {
     public void setBomb() {
         if (GameManagement.bombs.size() < bombQuantity) {
             GameManagement.bombs.add(new Bomb(setBombTileX(), setBombTileY(),
-                    new Image("./sprites/power-ups/fierce_bomb.png"), bombQuality));
+                    new Image("./sprites/bomb/bomb1.png"), bombQuality));
         }
     }
 
@@ -79,26 +95,117 @@ public class Bomber extends AnimatedEntity {
         StatusEffect blind = status.get("blind");
         if (InputManager.isF1()) {
             if (!blind.isActive()){
-                blind.init(0);
-                GameManagement.isBlind = true;
+                blind.init();
             }
         }
         if (blind.isActive()) {
             blind.update();
-        } else GameManagement.isBlind = false;
+        }
 
-        StatusEffect fierce = status.get("fierce");
+        StatusEffect fierce =  status.get("fierce");
         if (InputManager.isF2()) {
             if (!fierce.isActive()){
-                fierce.init(bombQuality);
-                bombQuality = 15;
+                fierce.init();
             }
         }
         if (fierce.isActive()) {
             fierce.update();
-        } else bombQuality = ((FierceBomb) fierce).getOldBombLevel();
+        }
 
-        StatusEffect freeze =
+        StatusEffect freeze = status.get("freeze");
+        if (InputManager.isF3()) {
+            if (!freeze.isActive()) {
+                freeze.init();
+            }
+        }
+        if (freeze.isActive()) {
+            freeze.update();
+        }
+
+        StatusEffect invert = status.get("invert");
+        if (InputManager.isF4()) {
+            if (!invert.isActive()) {
+                invert.init();
+            }
+        }
+        if (invert.isActive()) {
+            invert.update();
+        }
+
+        StatusEffect invincibility = status.get("invincible");
+        if (InputManager.isF5()) {
+            if (!invincibility.isActive()) {
+                invincibility.init();
+            }
+        }
+        if (invincibility.isActive()) {
+            invincibility.update();
+        }
+
+        StatusEffect percolate = status.get("percolate");
+        if (InputManager.isF6()) {
+            if (!percolate.isActive()) {
+                percolate.init();
+            }
+        }
+        if (percolate.isActive()) {
+            percolate.update();
+        }
+
+        StatusEffect slow = status.get("slow");
+        if (InputManager.isF7()) {
+            if (!slow.isActive()) {
+                slow.init();
+            }
+        }
+        if (slow.isActive()) {
+            slow.update();
+        }
+
+        StatusEffect timeBomb = status.get("time");
+        if (InputManager.isF8()) {
+            if (!timeBomb.isActive()) {
+                timeBomb.init();
+            }
+        }
+        if (timeBomb.isActive()) {
+            timeBomb.update();
+        }
+
+        StatusEffect force = status.get("force");
+        if (InputManager.isF9()) {
+            if (!force.isActive()) {
+                force.init();
+            }
+        }
+        if (force.isActive()) {
+            force.update();
+        }
+
+        StatusEffect heal = status.get("heal");
+        if (heal.isActive()) {
+            heal.update();
+        }
+
+        StatusEffect bombLvl = status.get("increaseBLvl");
+        if (bombLvl.isActive()) {
+            bombLvl.update();
+        }
+
+        StatusEffect bombNum = status.get("increaseBNum");
+        if (bombNum.isActive()) {
+            bombNum.update();
+        }
+
+        StatusEffect agile = status.get("agile");
+        if (agile.isActive()) {
+            agile.update();
+        }
+
+        StatusEffect random = status.get("random");
+        if (random.isActive()) {
+            random.update();
+        }
     }
 
     /***********************************************************************************
@@ -126,7 +233,6 @@ public class Bomber extends AnimatedEntity {
         if (canMove(x + p,y)) {
             x += p;
         }
-
     }
 
     public void calculateMove() {
@@ -167,28 +273,40 @@ public class Bomber extends AnimatedEntity {
         ) {
             return false;
         }
-        if (direction == 1 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
-                collide(GameManagement.getStaticEntityAt(bl_x, bl_y))
-        ) {
-            return false;
-        }
+        if (!ispercolate) {
+            if (direction == 1 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
+                    collide(GameManagement.getStaticEntityAt(bl_x, bl_y))
+            ) {
+                return false;
+            }
 
-        if (direction == 2 && collide(GameManagement.getStaticEntityAt(tr_x, tr_y)) ||
-                collide(GameManagement.getStaticEntityAt(br_x, br_y))
-        ) {
-            return false;
-        }
+            if (direction == 2 && collide(GameManagement.getStaticEntityAt(tr_x, tr_y)) ||
+                    collide(GameManagement.getStaticEntityAt(br_x, br_y))
+            ) {
+                return false;
+            }
 
-        if (direction == 3 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
-                collide(GameManagement.getStaticEntityAt(tr_x, tr_y))
-        ) {
-            return false;
-        }
+            if (direction == 3 && collide(GameManagement.getStaticEntityAt(tl_x, tl_y)) ||
+                    collide(GameManagement.getStaticEntityAt(tr_x, tr_y))
+            ) {
+                return false;
+            }
 
-        if (direction == 4 && collide(GameManagement.getStaticEntityAt(bl_x, bl_y)) ||
-                collide(GameManagement.getStaticEntityAt(br_x, br_y))
-        ) {
-            return false;
+            if (direction == 4 && collide(GameManagement.getStaticEntityAt(bl_x, bl_y)) ||
+                    collide(GameManagement.getStaticEntityAt(br_x, br_y))
+            ) {
+                return false;
+            }
+
+            for (Entity bomb : GameManagement.bombs) {
+                Bomb b = (Bomb) bomb;
+                if (b.collide(xx, yy)) {
+                    if (isforceuser) {
+                        b.setDirection(direction);
+                    }
+                    return false;
+                }
+            }
         }
 
         return true;
@@ -197,8 +315,57 @@ public class Bomber extends AnimatedEntity {
     /***********************************************************************************
      * Bomber collide and die
      ***********************************************************************************/
+    public void getStatusEffect(StatusEffect statusEffect) {
+        if (statusEffect.isAlive()) {
+            if (statusEffect instanceof Agile) status.get("agile").init();
+            if (statusEffect instanceof IncrementBombLevel) status.get("increaseBLvl").init();
+            if (statusEffect instanceof IncrementBombNumber) status.get("increaseBNum").init();
+            if (statusEffect instanceof Heal) status.get("heal").init();
+            if (statusEffect instanceof FierceBomb) status.get("fierce").init();
+            if (statusEffect instanceof FreezeTime) status.get("freeze").init();
+            if (statusEffect instanceof Invincibility) status.get("invincible").init();
+            if (statusEffect instanceof Percolate) status.get("percolate").init();
+            if (statusEffect instanceof TheForce) status.get("force").init();
+            if (statusEffect instanceof TimeBomb) status.get("time").init();
+            if (statusEffect instanceof Random) status.get("random").init();
+        }
+    }
 
+    public void collideEnemy() {
+        for (Entity e : GameManagement.mobileEntities) {
+            if (! (e instanceof Bomber)) {
+                if ((Utils.getTileX(x - 32) == e.getTileX() && getTileY() == e.getTileY())
+                        || Utils.getTileX(x + 32) == e.getTileX() && getTileY() == e.getTileY()
+                        || getTileX() == e.getTileX() && Utils.getTileY(y - 25) == e.getTileY()
+                        || getTileX() == e.getTileX() && Utils.getTileY(y + 32) == e.getTileY())
+                {
+                    if (e instanceof Ghost && e.isAlive()) {
+                        e.kill();
+                        java.util.Random random = new java.util.Random();
+                        switch (random.nextInt(3)) {
+                            case 0:
+                                status.get("blind").init();
+                                break;
+                            case 1:
+                                status.get("invert").init();
+                                break;
+                            case 2:
+                                status.get("slow").init();
+                                break;
+                        }
+                    }
+                    else killed();
+                }
+            }
+        }
+    }
 
+    public void pickUpPowerup() {
+        if (GameManagement.getStaticEntityAt(x+16*1.6, y+16*1.6) instanceof StatusEffect) {
+            getStatusEffect((StatusEffect) GameManagement.getStaticEntityAt(x + 16 * 1.6, y + 16 * 1.6));
+            GameManagement.getStaticEntityAt(x+1.6*16, y+1.6*16).kill();
+        }
+    }
 
     /***********************************************************************************
      * Bomber Sprites
@@ -225,14 +392,6 @@ public class Bomber extends AnimatedEntity {
     /***********************************************************************************
      * Utilities
      ***********************************************************************************/
-    public int getBombQuality() {
-        return bombQuality;
-    }
-
-    public void setBombQuality(int bombQuality) {
-        this.bombQuality = bombQuality;
-    }
-
     public double getSpeed() {
         return speed;
     }
@@ -241,19 +400,24 @@ public class Bomber extends AnimatedEntity {
         this.speed = speed;
     }
 
-    public int getBombQuantity() {
-        return bombQuantity;
+    public void increaseBombQuantity() {
+        bombQuantity++;
+        System.out.println("increase bomb quantity");
     }
 
-    public void setBombQuantity(int bombQuantity) {
-        this.bombQuantity = bombQuantity;
+    public void increaseBombQuality() {
+        bombQuality++;
+        System.out.println("increase bomb quality");
     }
 
-    public int getLives() {
-        return lives;
+    public void increaseLives() {
+        if (lives < 3) {
+            lives++;
+        }
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
+    public void increaseSpeed() {
+        speed += 0.1;
+        System.out.println("increase speed to " + speed);
     }
 }

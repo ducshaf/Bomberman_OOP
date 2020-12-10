@@ -20,10 +20,6 @@ public class MapGenerator {
     private static final int HEIGHT = 11;
     private static int[][] map = new int[HEIGHT][WIDTH];
 
-    public static int[][] getMap() {
-        return map;
-    }
-
     public static void generateMap() {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -62,7 +58,7 @@ public class MapGenerator {
 
     public static void inputMap() {
         try {
-            File f = new File("F:\\PROJECT\\bomberman-starter\\res\\Level1.txt");
+            File f = new File("F:\\PROJECT\\bomberman-starter\\res\\levels\\Level1.txt");
             Scanner sc = new Scanner(f);
             for (int i = 0; i < 11; i++) {
                 for (int j = 0; j < 15; j++) {
@@ -146,9 +142,6 @@ public class MapGenerator {
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 8: // box
-                        GameManagement.entities.add(new DestroyableWall(j, i, new Image("/box.png")));
-                        break;
-                    case 9: //box with power-ups
                         GameManagement.entities.add(new DestroyableWall(j, i, new Image("/box.png")));
                         break;
                     default:

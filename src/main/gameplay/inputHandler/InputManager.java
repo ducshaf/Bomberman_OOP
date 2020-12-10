@@ -3,80 +3,105 @@ package main.gameplay.inputHandler;
 import javafx.scene.Scene;
 
 public class InputManager {
-    private static boolean up = false, down = false, left = false, right = false, space = false,
+    private static boolean up = false, down = false, left = false, right = false, setBomb = false, controlBomb = false,
             f1 = false, f2 = false, f3 = false, f4 = false, f5 = false, f6 = false, f7 = false, f8 = false, f9 = false;
+
+    private static boolean inverted = false;
     private static long lastPressProcessed = 0;
+
     public static void keyboardHandle(Scene s) {
         s.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case W:
-                    up = true;
+                    if (!inverted){
+                        up = true;
+                    } else {
+                        down = true;
+                    }
                     break;
                 case S:
-                    down = true;
+                    if (!inverted) {
+                        down = true;
+                    } else {
+                        up = true;
+                    }
                     break;
                 case A:
-                    left = true;
+                    if (!inverted) {
+                        left = true;
+                    } else {
+                        right = true;
+                    }
                     break;
                 case D:
-                    right = true;
+                    if (!inverted) {
+                        right = true;
+                    } else {
+                        left = true;
+                    }
                     break;
                 case H:
                     if (System.currentTimeMillis() - lastPressProcessed > 200) {
-                        space = true;
+                        setBomb = true;
+                        lastPressProcessed = System.currentTimeMillis();
+                    }
+                    break;
+                case K:
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
+                        controlBomb = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F1:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f1 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F2:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f2 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F3:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f3 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F4:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f4 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F5:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f5 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F6:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f6 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F7:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f7 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F8:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f8 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
                     break;
                 case F9:
-                    if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+                    if (System.currentTimeMillis() - lastPressProcessed > 200) {
                         f9 = true;
                         lastPressProcessed = System.currentTimeMillis();
                     }
@@ -86,16 +111,35 @@ public class InputManager {
         s.setOnKeyReleased(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case W:
-                    up = false;
+                    if (!inverted){
+                        up = false;
+                    } else {
+                        down = false;
+                    }
                     break;
                 case S:
-                    down = false;
+                    if (!inverted) {
+                        down = false;
+                    } else {
+                        up = false;
+                    }
                     break;
                 case A:
-                    left = false;
+                    if (!inverted) {
+                        left = false;
+                    } else {
+                        right = false;
+                    }
                     break;
                 case D:
-                    right = false;
+                    if (!inverted) {
+                        right = false;
+                    } else {
+                        left = false;
+                    }
+                    break;
+                case K:
+                    controlBomb = false;
                     break;
                 case F1:
                     f1 = false;
@@ -145,8 +189,12 @@ public class InputManager {
         return right;
     }
 
-    public static boolean isSpace() {
-        return space;
+    public static boolean isSetBomb() {
+        return setBomb;
+    }
+
+    public static boolean isControlBomb() {
+        return controlBomb;
     }
 
     public static boolean isF1() {return f1;}
@@ -184,6 +232,11 @@ public class InputManager {
     }
 
     public static void setSpace() {
-        space = false;
+        setBomb = false;
     }
+
+    public static void setInverted(boolean state) {
+        inverted = state;
+    }
+
 }

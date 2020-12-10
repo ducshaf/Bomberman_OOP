@@ -4,11 +4,14 @@ import javafx.scene.image.Image;
 import main.entities.mobileEntities.AI.AI;
 import main.graphics.Sprite;
 
+import java.util.Random;
+
 public class Ghost extends Enemy {
     private AI ghost = new AI();
     public Ghost(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img, 1.6);
     }
+    Random teleportChance = new Random();
 
     @Override
     public boolean canMove(double xx, double yy) {
@@ -32,6 +35,26 @@ public class Ghost extends Enemy {
     @Override
     public void setDirection() {
         direction = ghost.randomDirection();
+        if (teleportChance.nextInt(100) < 20) {
+            int teleportBound;
+            switch (direction) {
+                case 1:
+                    teleportBound = (int) x - 50*2;
+                    if (teleportBound > 0) x -= teleportChance.nextInt(teleportBound);
+                    break;
+                case 2:
+                    teleportBound = 17*50 - (int) x;
+                    if (teleportBound > 0) x += teleportChance.nextInt(teleportBound);
+                    break;
+                case 3:
+                    teleportBound = (int) x - 50*3;
+                    if (teleportBound > 0) y -= teleportChance.nextInt(teleportBound);
+                    break;
+                case 4:
+                    teleportBound = 14*50 - (int) x;
+                    if (teleportBound > 0) y += teleportChance.nextInt(teleportBound);
+            }
+        }
     }
 
     @Override

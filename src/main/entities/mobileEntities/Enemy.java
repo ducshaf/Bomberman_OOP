@@ -3,6 +3,7 @@ package main.entities.mobileEntities;
 import javafx.scene.image.Image;
 import main.GameManagement;
 import main.entities.AnimatedEntity;
+import main.entities.Entity;
 import main.utils.Utils;
 
 public abstract class Enemy extends AnimatedEntity {
@@ -82,6 +83,13 @@ public abstract class Enemy extends AnimatedEntity {
         }
         else if (collide(GameManagement.getStaticEntityAt(xxa, yya))) {
             return false;
+        }
+        else {
+            for (Entity e : GameManagement.bombs) {
+                if (Utils.getTileY(yya) == e.getTileY() && Utils.getTileX(xxa) == e.getTileX()) {
+                    return false;
+                }
+            }
         }
         return true;
     }

@@ -1,7 +1,11 @@
 package main.entities;
 
 import javafx.scene.image.Image;
+import main.GameManagement;
+import main.entities.mobileEntities.Bomber;
+import main.entities.mobileEntities.Enemy;
 import main.entities.staticEntities.Grass;
+import main.entities.statusEffect.StatusEffect;
 
 public abstract class AnimatedEntity extends Entity {
     int _animate = 0;
@@ -9,6 +13,7 @@ public abstract class AnimatedEntity extends Entity {
     protected boolean killed = false;
     protected boolean isInvul = false;
     protected int invulTime = 120;
+
 
     public AnimatedEntity(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
@@ -51,6 +56,6 @@ public abstract class AnimatedEntity extends Entity {
     }
 
     public boolean collide(Entity e) {
-        return !(e instanceof Grass);
+        return !(e instanceof Grass || e instanceof StatusEffect);
     }
 }

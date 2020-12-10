@@ -1,7 +1,6 @@
 package main.entities.mobileEntities;
 
 import javafx.scene.image.Image;
-import main.GameManagement;
 import main.entities.mobileEntities.AI.AdvancedAI;
 import main.graphics.Sprite;
 

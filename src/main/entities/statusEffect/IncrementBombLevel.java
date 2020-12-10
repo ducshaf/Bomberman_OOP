@@ -1,17 +1,24 @@
 package main.entities.statusEffect;
 
-import javafx.scene.image.Image;
+import main.entities.mobileEntities.Bomber;
+import main.graphics.Sprite;
+
 public class IncrementBombLevel extends StatusEffect {
-    public IncrementBombLevel(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+    public IncrementBombLevel(int xUnit, int yUnit) {
+        super(xUnit, yUnit, Sprite.bombQualityUp);
+    }
+
+    public IncrementBombLevel(Bomber bomber) {
+        super(bomber);
     }
 
     @Override
     public void init() {
-        //increase bomb level (bomb radius)
+        player.increaseBombQuality();
     }
 
     @Override
     public void update() {
+        isActive = false;
     }
 }

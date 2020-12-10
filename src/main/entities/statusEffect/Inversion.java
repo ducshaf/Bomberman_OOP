@@ -1,30 +1,35 @@
 package main.entities.statusEffect;
 
 import javafx.scene.image.Image;
+import main.entities.mobileEntities.Bomber;
+import main.gameplay.inputHandler.InputManager;
 import main.graphics.Layer;
+import main.graphics.Sprite;
 
 public class Inversion extends StatusEffect {
-    public Inversion(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+    public Inversion(int xUnit, int yUnit) {
+        super(xUnit, yUnit, Sprite.inversion);
     }
 
-    public Inversion() {
-
+    public Inversion(Bomber bomber) {
+        super(bomber);
     }
 
     @Override
     public void init() {
-        duration += 600;
+        duration += 1200;
         isActive = true;
+        InputManager.setInverted(true);
+        System.out.println("input reverse");
     }
 
     @Override
     public void update() { // 5s
         if (duration > 0) {
             --duration;
-            // invert input control
         } else if (isActive) {
             isActive = false;
+            InputManager.setInverted(false);
         }
     }
 }
