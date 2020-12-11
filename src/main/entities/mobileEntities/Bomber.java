@@ -11,20 +11,25 @@ import main.graphics.Sprite;
 import main.utils.Utils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 public class Bomber extends AnimatedEntity {
+    public int dead_animation = 70;
     public int direction;
     public static double speed;
     public static int bombQuality;
     public static int bombQuantity;
     public static int lives = 3;
     public static Map<String, StatusEffect> status = new HashMap<>();
+    public static Vector<Bomb> bombs = new Vector<>();
 
     public boolean isinvul = false;
     public boolean ispercolate = false;
     public boolean isforceuser = false;
     public boolean isfierce = false;
+    public boolean isRemote = false;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
@@ -55,19 +60,22 @@ public class Bomber extends AnimatedEntity {
     @Override
     public void update() {
         if (killed) {
-            if (invulTime == 120) {
-                System.out.println(lives + " lives-- " + getX() + "," + getY());
-                if (!isinvul) {
-                    lives--;
+            if (lives == 0) {
+                if (dead_animation > 0) {
+                    animate();
+                    img = chooseImage(-1);
+                    dead_animation--;
+                } else isAlive = false;
+            } else {
+                if (invulTime == 120) {
+                    if (!isinvul) {
+                        lives--;
+                    }
                 }
+                invulTimer();
             }
-            invulTimer();
         }
-        if (lives == 0) {
-            System.out.println("died" + direction);
-            isAlive = false;
-        }
-        if (isAlive) {
+        if (lives != 0) {
             calculateMove();
             collideEnemy();
             pickUpPowerup();
@@ -85,9 +93,10 @@ public class Bomber extends AnimatedEntity {
      * Bomber ability
      ***********************************************************************************/
     public void setBomb() {
-        if (GameManagement.bombs.size() < bombQuantity) {
-            GameManagement.bombs.add(new Bomb(setBombTileX(), setBombTileY(),
-                    new Image("./sprites/bomb/bomb1.png"), bombQuality));
+        if (bombs.size() < bombQuantity) {
+            Bomb bomb = new Bomb(setBombTileX(), setBombTileY(), new Image("./sprites/bomb/bomb1.png"), bombQuality);
+            bombs.add(bomb);
+            GameManagement.bombs.add(bomb);
         }
     }
 
@@ -372,7 +381,10 @@ public class Bomber extends AnimatedEntity {
      ***********************************************************************************/
 
     public Image chooseImage(int dir) {
-        switch (direction) {
+        switch (dir) {
+            case -1:
+                return Sprite.getMoveSprite(Sprite.player_die, Sprite.player_die_1,
+                        Sprite.player_die_2, Sprite.player_die_2, get_animate(), 70);
             case 1: //left
                 return Sprite.getMoveSprite(Sprite.player_left, Sprite.player_left_1,
                         Sprite.player_left_2, get_animate(), 24);
@@ -420,4 +432,5 @@ public class Bomber extends AnimatedEntity {
         speed += 0.1;
         System.out.println("increase speed to " + speed);
     }
+
 }

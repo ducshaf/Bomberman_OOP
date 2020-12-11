@@ -19,26 +19,26 @@ public class TimeBomb extends StatusEffect{
 
     @Override
     public void init() {
-        duration += 600;
+        duration += 1200;
         isActive = true;
-        GameManagement.isRemoteControlled = true;
+        player.isRemote = true;
     }
 
     @Override
     public void update() {
         if (duration > 0) {
             --duration;
+            if (GameManagement.bombs.isEmpty()) player.isRemote = true;
             if (InputManager.isControlBomb()) {
-                GameManagement.isRemoteControlled = false;
+                player.isRemote = false;
                 for (Entity bomb : GameManagement.bombs) {
                     Bomb b = (Bomb) bomb;
                     b.explode();
                 }
-                duration = 0;
             }
         } else if (isActive) {
             isActive = false;
-            GameManagement.isRemoteControlled = false;
+            player.isRemote = false;
         }
     }
 }

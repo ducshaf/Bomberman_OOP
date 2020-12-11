@@ -99,6 +99,34 @@ public class Sprite {
 	public static final Image ghost_right_1 = new Image("./sprites/ghost/ghost_right_1.png");
 	public static final Image ghost_right_2 = new Image("./sprites/ghost/ghost_right_2.png");
 
+	/***********************************************************************************
+	 * Evil Bomber Sprites
+	 ***********************************************************************************/
+	public static final Image bomber_up_0 = new Image("./sprites/bomber/bomber_up0.png");
+	public static final Image bomber_up_1 = new Image("./sprites/bomber/bomber_up1.png");
+	public static final Image bomber_up_2 = new Image("./sprites/bomber/bomber_up2.png");
+	public static final Image bomber_up_3 = new Image("./sprites/bomber/bomber_up3.png");
+	public static final Image bomber_up_4 = new Image("./sprites/bomber/bomber_up4.png");
+
+	public static final Image bomber_down_0 = new Image("./sprites/bomber/bomber_down0.png");
+	public static final Image bomber_down_1 = new Image("./sprites/bomber/bomber_down1.png");
+	public static final Image bomber_down_2 = new Image("./sprites/bomber/bomber_down2.png");
+	public static final Image bomber_down_3 = new Image("./sprites/bomber/bomber_down3.png");
+	public static final Image bomber_down_4 = new Image("./sprites/bomber/bomber_down4.png");
+
+	public static final Image bomber_left_0 = new Image("./sprites/bomber/bomber_left0.png");
+	public static final Image bomber_left_1 = new Image("./sprites/bomber/bomber_left1.png");
+	public static final Image bomber_left_2 = new Image("./sprites/bomber/bomber_left2.png");
+	public static final Image bomber_left_3 = new Image("./sprites/bomber/bomber_left3.png");
+	public static final Image bomber_left_4 = new Image("./sprites/bomber/bomber_left4.png");
+
+	public static final Image bomber_right_0 = new Image("./sprites/bomber/bomber_right0.png");
+	public static final Image bomber_right_1 = new Image("./sprites/bomber/bomber_right1.png");
+	public static final Image bomber_right_2 = new Image("./sprites/bomber/bomber_right2.png");
+	public static final Image bomber_right_3 = new Image("./sprites/bomber/bomber_right3.png");
+	public static final Image bomber_right_4 = new Image("./sprites/bomber/bomber_right4.png");
+
+
 	public static Image getMoveSprite(Image x0, Image x1, Image x2, int animate, int time) {
 		int calc = animate % time;
 		int diff = time / 3;

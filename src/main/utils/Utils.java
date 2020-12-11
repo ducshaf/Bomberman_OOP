@@ -4,6 +4,9 @@ public class Utils {
     public static final int WIDTH = 1366;
     public static final int HEIGHT = 768;
 
+    public static final int ROW = 11;
+    public static final int COL = 15;
+
     public static final int LEFT = 1;
     public static final int RIGHT = 2;
     public static final int UP = 3;

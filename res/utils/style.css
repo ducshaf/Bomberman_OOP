@@ -11,6 +11,10 @@
     -fx-border-color: aliceblue;
 }
 
+.toggle-button:hover {
+    -fx-border-color: aliceblue;
+}
+
 #menu {
     -fx-pref-width: 50;
     -fx-pref-height: 50;
@@ -36,9 +40,27 @@
     -fx-pref-height: 40px;
     -fx-font-size: 18px;
     -fx-border-radius: 5px;
+
+    -fx-strikethrough: true;
 }
 
 #pausePane > #soundButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-border-radius: 10px;
     -fx-pref-height: 50px;
     -fx-pref-width: 50px;
+}
+
+#pausePane > #soundButton:hover {
+    -fx-border-color: aliceblue;
+}
+
+#pausePane > #soundButton:selected {
+    -fx-background-color: rgba(0,0,0,0.30);
+    -fx-background-radius: 10px;
+}
+#pausePane > #soundButton:selected > .text {
+    -fx-strikethrough: true;
 }

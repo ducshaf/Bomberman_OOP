@@ -20,6 +20,7 @@ public class Bomb extends Entity {
     boolean exploded = false;
     boolean passable = true;
     int direction = 0;
+    boolean fierce = false;
 
 
     public Bomb(int xUnit, int yUnit, Image img, int bombLevel) {
@@ -39,14 +40,15 @@ public class Bomb extends Entity {
     @Override
     public void update() {
         if (timer > 0) { // >0.5s
-            if (timer < 30) {
-                if (!exploded) {
-                    explode();
-                    System.out.println(getX() + "," + getY());
+            if (!player.isRemote){
+                if (timer < 30) {
+                    if (!exploded) {
+                        explode();
+                    }
+                    updateExplosions();
                 }
-                updateExplosions();
+                timer--;
             }
-            timer--;
             if ((Math.abs(player.getX() - getX()) > 31*1.6 || Math.abs(player.getY() - getY()) > 31*1.6) && passable) {
                 passable = false;
             }
@@ -87,7 +89,7 @@ public class Bomb extends Entity {
                 explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_up.png")));
                 break;
             } else if (GameManagement.entities.get((newUnit) * 15 + xUnit) instanceof DestroyableWall) {
-                if (!player.isfierce) {
+                if (!player.isfierce && !fierce) {
                     explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_up.png")));
                     break;
                 } else explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_vertical.png")));
@@ -104,7 +106,7 @@ public class Bomb extends Entity {
                 explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_down.png")));
                 break;
             } else if (GameManagement.entities.get(newUnit * 15 + xUnit) instanceof DestroyableWall) {
-                if (!player.isfierce) {
+                if (!player.isfierce && !fierce) {
                     explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_down.png")));
                     break;
                 } else explosions.add(new Explosion(xUnit, newUnit, new Image("./sprites/bomb/flame_vertical.png")));
@@ -122,7 +124,7 @@ public class Bomb extends Entity {
                 break;
             }
             else if (GameManagement.entities.get(yUnit * 15 + newUnit) instanceof DestroyableWall) {
-                if (!player.isfierce) {
+                if (!player.isfierce && !fierce) {
                     explosions.add(new Explosion(newUnit, yUnit, new Image("./sprites/bomb/flame_right.png")));
                     break;
                 } else explosions.add(new Explosion(newUnit, yUnit, new Image("./sprites/bomb/flame_horizontal.png")));
@@ -141,7 +143,7 @@ public class Bomb extends Entity {
                 break;
             }
             else if (GameManagement.entities.get(yUnit * 15 + newUnit) instanceof DestroyableWall) {
-                if (!player.isfierce) {
+                if (!player.isfierce && !fierce) {
                     explosions.add(new Explosion(newUnit, yUnit, new Image("./sprites/bomb/flame_left.png")));
                     break;
                 } else explosions.add(new Explosion(newUnit, yUnit, new Image("./sprites/bomb/flame_horizontal.png")));
@@ -162,17 +164,20 @@ public class Bomb extends Entity {
     public boolean canMove(double xx, double yy) {
         double xxa = xx, yya = yy;
         if (direction == 2) {
-            xxa += 32*1.6 - 0.1;
+            xxa += 32*1.6 - 5;
         }
         if (direction == 4) {
-            yya += 32*1.6 - 0.1;
+            yya += 32*1.6 - 5;
         }
         if (xxa < 32*2*1.6 - 0.1 || xxa > 32*17*1.6 + 0.1 || yya < 32*3*1.6 - 0.1 || yya > 32*14*1.6 + 0.1) {
+            timer = 32;
             return false;
         }
         else if (collide(GameManagement.getStaticEntityAt(xxa, yya))) {
+            timer = 32;
             return false;
         }
+
         return true;
     }
 
@@ -185,21 +190,31 @@ public class Bomb extends Entity {
             case 1:
                 if (canMove(x-3.2*1.6, y)) {
                     x -= player.getSpeed()*7*1.6;
-                } else direction = 0;
+                } else {
+                    direction = 0;
+                }
                 break;
             case 2:
                 if (canMove(x+3.2*1.6, y)) {
                     x += player.getSpeed()*7*1.6;
-                } else direction = 0;
+                } else {
+                    direction = 0;
+                }
                 break;
             case 3:
                 if (canMove(x, y-3.2*1.6)) {
-                    y -= player.getSpeed()*7*1.6;
-                } else direction = 0;
+                    y = y - player.getSpeed()*7*1.6;
+                } else {
+                    direction = 0;
+                }
+                break;
             case 4:
                 if (canMove(x, y+3.2*1.6)) {
                     y += player.getSpeed()*7*1.6;
-                } else direction = 0;
+                } else {
+                    direction = 0;
+                }
+                break;
         }
     }
 
@@ -207,4 +222,7 @@ public class Bomb extends Entity {
         this.direction = direction;
     }
 
+    public void setFierce(boolean fierce) {
+        this.fierce = fierce;
+    }
 }

@@ -13,3 +13,4 @@ public class AI {
         return random.nextInt(4) + 1;
     }
 }
+

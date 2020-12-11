@@ -3,6 +3,7 @@ package main.gameplay.map;
 import javafx.scene.image.Image;
 
 import main.GameManagement;
+import main.entities.mobileEntities.EvilBomb;
 import main.entities.staticEntities.DestroyableWall;
 import main.entities.mobileEntities.Bomber;
 import main.entities.staticEntities.Grass;
@@ -139,6 +140,7 @@ public class MapGenerator {
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 7: // AI Bomber?
+                        GameManagement.mobileEntities.add(new EvilBomb(j, i, Sprite.player_up));
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 8: // box

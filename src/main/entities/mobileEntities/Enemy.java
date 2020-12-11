@@ -19,11 +19,7 @@ public abstract class Enemy extends AnimatedEntity {
 
     public void update() {
         if (killed) {
-            if (death_animate > 0) {
-                animate();
-                img = chooseImage(-1);
-                death_animate--;
-            } else isAlive = false;
+            die();
         } else {
             animate();
             img = chooseImage(direction);
@@ -95,4 +91,12 @@ public abstract class Enemy extends AnimatedEntity {
     }
 
     public abstract Image chooseImage(int id);
+
+    public void die() {
+        if (death_animate > 0) {
+            animate();
+            img = chooseImage(-1);
+            death_animate--;
+        } else isAlive = false;
+    }
 }

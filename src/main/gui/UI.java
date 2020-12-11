@@ -3,6 +3,7 @@ package main.gui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import main.GameManagement;
 import main.graphics.Layer;
@@ -44,10 +45,10 @@ public class UI {
             }
         });
 
-        Button sound = new Button("\uD83D\uDD0A");
+        ToggleButton sound = new ToggleButton("\uD83D\uDD0A");
         sound.setId("soundButton");
         sound.setLayoutX(605);
-        sound.setLayoutY(305);
+        sound.setLayoutY(295);
 
         Button resume = new Button("Resume");
         resume.setLayoutX(605);

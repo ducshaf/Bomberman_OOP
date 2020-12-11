@@ -44,11 +44,7 @@ public class GameManagement {
 
     public static boolean isBlind = false;
     public static boolean isFreeze = false;
-    public static boolean isRemoteControlled = false;
 
-    public static GraphicsContext getGraphicsContext() {
-        return gc;
-    }
 
     public static Bomber getPlayer() {
         if (mobileEntities.get(0) instanceof Bomber){
@@ -103,23 +99,24 @@ public class GameManagement {
         Layer.drawMobileLayer(bombs);
         Layer.drawOverlay();
         if (isBlind) Layer.blind();
-        if (isFreeze || isRemoteControlled) Layer.freezeTime();
+        if (isFreeze) Layer.freezeTime();
     }
 
 // update game logic, xử lí input từ bàn phím, update entities.
     public static void update() {
         if (getPlayer() == null) {
-            pause(1);
+            if (bombs.isEmpty()) pause(1);
         }
         if (mobileEntities.size() == 1) {
-            pause(2);
+            if (bombs.isEmpty()) pause(2);
         }
-        if (!isRemoteControlled) {
+        if (!isFreeze) {
             for (Iterator<Entity> e = bombs.iterator(); e.hasNext();) {
                 Entity bomb = e.next();
                 bomb.update();
                 if (!bomb.isAlive()) {
                     e.remove();
+                    Bomber.bombs.remove((Bomb) bomb);
                 }
             }
         }
@@ -143,7 +140,7 @@ public class GameManagement {
             staticEntity.update();
             if (!staticEntity.isAlive()) {
                 Random random = new Random();
-                if (random.nextInt(50) < 50 && staticEntity instanceof DestroyableWall) {
+                if (random.nextInt(50) < 20 && staticEntity instanceof DestroyableWall) {
                     e.set(StatusEffect.initStatusEffect(staticEntity.getTileX(), staticEntity.getTileY()));
                 } else e.set(new Grass(staticEntity.getTileX(), staticEntity.getTileY(), null));
             }
@@ -182,14 +179,13 @@ public class GameManagement {
 
     public static void reset() {
         timer.stop();
-        root.getChildren().remove(UI.pause);
         entities.clear();
         mobileEntities.clear();
         bombs.clear();
+        root.getChildren().removeAll(UI.gameOver, UI.pause, UI.victory);
         MapGenerator.addEntities();
         isPaused = false;
         isFreeze = false;
-        isRemoteControlled = false;
         isBlind = false;
         InputManager.setInverted(false);
         start();

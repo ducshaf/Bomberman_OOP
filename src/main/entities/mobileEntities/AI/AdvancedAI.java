@@ -3,6 +3,7 @@ package main.entities.mobileEntities.AI;
 import main.GameManagement;
 import main.entities.Entity;
 import main.entities.staticEntities.Grass;
+import main.entities.statusEffect.StatusEffect;
 import main.utils.Utils;
 
 import java.util.LinkedHashSet;
@@ -11,14 +12,14 @@ import java.util.Stack;
 import java.util.Vector;
 
 import static java.lang.Math.abs;
+import static main.utils.Utils.COL;
+import static main.utils.Utils.ROW;
 
 public class AdvancedAI extends AI {
-    final static int ROW = 11;
-    final static int COL = 15;
-
     private cell[][] cells = new cell[ROW][COL];
-    protected Entity enemy;
     private Stack<Pair> path = new Stack<>();
+    protected int[][] map = new int[ROW][COL];
+    protected Entity enemy;
     Pair nextMove;
     boolean reachable = false;
     int cooldown = 5;
@@ -26,12 +27,9 @@ public class AdvancedAI extends AI {
     public AdvancedAI(Entity e) {
         super();
         enemy = e;
-        cooldown += GameManagement.mobileEntities.indexOf(e);
     }
 
     public int calculateDirection() {
-        // Create a parallel thread to aStarSearch for path to player when cd is down or reach old goal.
-        //
         if (cooldown == 5) {
             path.clear();
             nextMove = null;
@@ -41,7 +39,6 @@ public class AdvancedAI extends AI {
             if (path.size() == 1) return randomDirection();
         }
 
-        // aStarSearch have a cd of ~15s (dont know how it's 15s but oh well :v)
         if (cooldown > 0) {
             cooldown--;
         } else {
@@ -52,7 +49,6 @@ public class AdvancedAI extends AI {
         if (reachable) {
             if (nextMove == null) {
                 setNextMove();
-                return 0;
             }
 
             double x = Utils.getPreciseDouble((nextMove.x + 2)*32*1.6);
@@ -67,10 +63,6 @@ public class AdvancedAI extends AI {
                 }
             }
 
-            // set direction
-            // sometimes this doesnt work (return randomDirection()) bcz cd is down and aStarSearch start.
-            // but it still reached goal in the end so IT'S NOT A BUG, IT'S A FEATURE!
-            // FIXED!
             if (enemy.getY() == y) {
                 if (enemy.getX() > x) {
                     // set direction to left
@@ -139,18 +131,16 @@ public class AdvancedAI extends AI {
         path.push(new Pair(col, row));
     }
 
-    // get a Integer 2D array from list of current static entities.
-    public int[][] getMap() {
-        int[][] map = new int[ROW][COL];
+    // update map.
+    public void getMap() {
         Vector<Entity> entities = GameManagement.entities;
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
-                if (entities.get(i*COL + j) instanceof Grass) {
+                if (entities.get(i*COL + j) instanceof Grass || entities.get(i*COL + j) instanceof StatusEffect) {
                     map[i][j] = 0;
                 } else map[i][j] = 1;
             }
         }
-        return map;
     }
 
     public void aStarSearch(Pair src, Pair des) {
@@ -162,7 +152,7 @@ public class AdvancedAI extends AI {
             reachable = false;
             return;
         }
-        int[][] map = getMap();
+        getMap();
 
         if (isBlocked(src.x, src.y, map) || isBlocked(des.x, des.y, map)) {
             reachable = false;
@@ -206,7 +196,7 @@ public class AdvancedAI extends AI {
                     tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i - 1][j] && !isBlocked(j,i-1, map)) {
-                    gNew = cells[i-1][j].g + 1;
+                    gNew = cells[i][j].g + 1;
                     hNew = calculateDistanceBetweenNodes(j, i-1, des);
                     fNew = gNew + hNew;
 
@@ -230,7 +220,7 @@ public class AdvancedAI extends AI {
                     tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i + 1][j] && !isBlocked(j,i+1, map)) {
-                    gNew = cells[i+1][j].g + 1;
+                    gNew = cells[i][j].g + 1;
                     hNew = calculateDistanceBetweenNodes((j), i+1, des);
                     fNew = gNew + hNew;
 
@@ -255,7 +245,7 @@ public class AdvancedAI extends AI {
                     tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i][j - 1] && !isBlocked(j-1,i, map)) {
-                    gNew = cells[i][j-1].g + 1;
+                    gNew = cells[i][j].g + 1;
                     hNew = calculateDistanceBetweenNodes((j-1), i, des);
                     fNew = gNew + hNew;
 
@@ -280,7 +270,7 @@ public class AdvancedAI extends AI {
                     tracePath(cells, des, src);
                     return;
                 } else if (!closedList[i][j + 1] && !isBlocked(j+1,i, map)) {
-                    gNew = cells[i][j+1].g + 1;
+                    gNew = cells[i][j].g + 1;
                     hNew = calculateDistanceBetweenNodes((j+1), i, des);
                     fNew = gNew + hNew;
 
@@ -296,28 +286,5 @@ public class AdvancedAI extends AI {
             }
         }
     }
-
 }
 
-class pPair {
-    Pair cord;
-    double f;
-
-    public pPair(Pair cord, double f) {
-        this.cord = cord;
-        this.f = f;
-    }
-}
-class cell {
-    int parent_i, parent_j;
-    // f = g + h
-    double f, g, h;
-
-    public cell(int parent_i, int parent_j, double f, double g, double h) {
-        this.parent_i = parent_i;
-        this.parent_j = parent_j;
-        this.f = f;
-        this.g = g;
-        this.h = h;
-    }
-}

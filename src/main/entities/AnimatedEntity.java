@@ -34,7 +34,6 @@ public abstract class AnimatedEntity extends Entity {
     public void invulTimer() {
         if (invulTime > 0) {
             invulTime--;
-            System.out.println(invulTime);
         } else {
             invulTime = 120;
             isInvul = false;

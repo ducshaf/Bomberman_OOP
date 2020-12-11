@@ -54,21 +54,13 @@ public class App {
         singlePlayer.setLayoutY(500);
         singlePlayer.setOnAction(actionEvent -> root.getChildren().add(chooseStage));
 
-        Button multiPlayer = new Button("LAN mode");
-        multiPlayer.setId("2P");
-        multiPlayer.setLayoutX(600);
-        multiPlayer.setLayoutY(575);
-        multiPlayer.setOnAction(actionEvent -> {
-            // init MultiPlayer game
-        });
-
         Button exit = new Button("Exit");
         exit.setId("exit");
         exit.setLayoutX(600);
-        exit.setLayoutY(650);
+        exit.setLayoutY(600);
         exit.setOnAction(actionEvent -> System.exit(0));
 
-        root.getChildren().addAll(c,singlePlayer, multiPlayer, exit);
+        root.getChildren().addAll(c,singlePlayer, exit);
         primaryStage.setScene(s);
     }
 
