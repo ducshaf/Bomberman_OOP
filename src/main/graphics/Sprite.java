@@ -124,7 +124,32 @@ public class Sprite {
 	public static final Image bomber_right_1 = new Image("./sprites/bomber/bomber_right1.png");
 	public static final Image bomber_right_2 = new Image("./sprites/bomber/bomber_right2.png");
 	public static final Image bomber_right_3 = new Image("./sprites/bomber/bomber_right3.png");
-	public static final Image bomber_right_4 = new Image("./sprites/bomber/bomber_right4.png");
+
+	/***********************************************************************************
+	 * Snow element Sprites
+	 ***********************************************************************************/
+	public static final Image Snow_element_left_1 = new Image("./sprites/snow_element/snow_element_left_1.png");
+	public static final Image Snow_element_left_2 = new Image("./sprites/snow_element/snow_element_left_2.png");
+	public static final Image Snow_element_left_3 = new Image("./sprites/snow_element/snow_element_left_3.png");
+	public static final Image Snow_element_left_4 = new Image("./sprites/snow_element/snow_element_left_4.png");
+	public static final Image Snow_element_left_5 = new Image("./sprites/snow_element/snow_element_left_5.png");
+	public static final Image Snow_element_left_6 = new Image("./sprites/snow_element/snow_element_left_6.png");
+	public static final Image Snow_element_left_7 = new Image("./sprites/snow_element/snow_element_left_7.png");
+
+
+	public static final Image Snow_element_right_1 = new Image("./sprites/snow_element/snow_element_right_1.png");
+	public static final Image Snow_element_right_2 = new Image("./sprites/snow_element/snow_element_right_2.png");
+	public static final Image Snow_element_right_3 = new Image("./sprites/snow_element/snow_element_right_3.png");
+	public static final Image Snow_element_right_4 = new Image("./sprites/snow_element/snow_element_right_4.png");
+	public static final Image Snow_element_right_5 = new Image("./sprites/snow_element/snow_element_right_5.png");
+	public static final Image Snow_element_right_6 = new Image("./sprites/snow_element/snow_element_right_6.png");
+	public static final Image Snow_element_right_7 = new Image("./sprites/snow_element/snow_element_right_7.png");
+
+	public static final Image Snow_element_die_1 = new Image("./sprites/snow_element/snow_element_die_2.png");
+	public static final Image Snow_element_die_2 = new Image("./sprites/snow_element/snow_element_die_3.png");
+	public static final Image Snow_element_die_3 = new Image("./sprites/snow_element/snow_element_die_4.png");
+	public static final Image Snow_element_die_4 = new Image("./sprites/snow_element/snow_element_die_5.png");
+	public static final Image Snow_element_die_5 = new Image("./sprites/snow_element/snow_element_die_6.png");
 
 
 	public static Image getMoveSprite(Image x0, Image x1, Image x2, int animate, int time) {
@@ -173,6 +198,33 @@ public class Sprite {
 			return x3;
 		}
 		return x4;
+	}
+
+	public static Image getMoveSprite(Image x0, Image x1, Image x2, Image x3,
+									  Image x4,Image x5,Image x6,int animate, int time) {
+		int calc = animate % time;
+		int diff = time / 4;
+
+		if (calc < diff) {
+			return x0;
+		}
+		if (calc < diff*2) {
+			return x1;
+		}
+		if (calc < diff*3) {
+			return x2;
+		}
+		if (calc < diff*4) {
+			return x3;
+		}
+		if (calc < diff*5) {
+			return x4;
+		}
+		if (calc < diff*6) {
+			return x5;
+		}
+		return x6;
+
 	}
 
 	public static Image getNumber(int time) {

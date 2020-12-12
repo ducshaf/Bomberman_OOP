@@ -3,6 +3,7 @@ package main.entities.bomb;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import main.GameManagement;
+import main.audio.BGM_and_SFX;
 import main.entities.Entity;
 import main.entities.mobileEntities.Bomber;
 import main.entities.staticEntities.DestroyableWall;
@@ -43,8 +44,10 @@ public class Bomb extends Entity {
             if (!player.isRemote){
                 if (timer < 30) {
                     if (!exploded) {
+                        BGM_and_SFX.stopExplosion();
                         explode();
                     }
+                    BGM_and_SFX.playExplosion();
                     updateExplosions();
                 }
                 timer--;

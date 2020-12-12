@@ -3,13 +3,10 @@ package main.gameplay.map;
 import javafx.scene.image.Image;
 
 import main.GameManagement;
-import main.entities.mobileEntities.EvilBomb;
+import main.entities.mobileEntities.*;
 import main.entities.staticEntities.DestroyableWall;
-import main.entities.mobileEntities.Bomber;
 import main.entities.staticEntities.Grass;
 import main.entities.staticEntities.Wall;
-import main.entities.mobileEntities.Ghost;
-import main.entities.mobileEntities.Slime;
 import main.graphics.Sprite;
 
 import java.io.File;
@@ -59,7 +56,7 @@ public class MapGenerator {
 
     public static void inputMap() {
         try {
-            File f = new File("F:\\PROJECT\\bomberman-starter\\res\\levels\\Level1.txt");
+            File f = new File("./res/levels/Level1.txt");
             Scanner sc = new Scanner(f);
             for (int i = 0; i < 11; i++) {
                 for (int j = 0; j < 15; j++) {
@@ -130,6 +127,7 @@ public class MapGenerator {
                         GameManagement.mobileEntities.add(new Slime(j, i, Sprite.player_up));
                         break;
                     case 4: // Advance mob
+                        GameManagement.entities.add(new Snow_element(j, i, null));
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 5: // Ghost

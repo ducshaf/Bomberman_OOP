@@ -7,6 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
+import main.audio.BGM_and_SFX;
 import main.entities.bomb.Bomb;
 import main.entities.mobileEntities.Bomber;
 import main.entities.staticEntities.DestroyableWall;
@@ -68,6 +69,9 @@ public class GameManagement {
     }
 
     public static void start() {
+        BGM_and_SFX.stopGameOver();
+        BGM_and_SFX.stopGameWinning();
+        BGM_and_SFX.resumeBGM();
         currentGameTime = 0;
         startNanoTime = System.nanoTime();
 
@@ -168,8 +172,16 @@ public class GameManagement {
     public static void pause(int id) {
         isPaused = true;
         if (id == 0) root.getChildren().add(UI.pause);
-        if (id == 1) root.getChildren().add(UI.gameOver);
-        if (id == 2) root.getChildren().add(UI.victory);
+        if (id == 1){
+            BGM_and_SFX.stopBGM();
+            BGM_and_SFX.playGameOver();
+
+            root.getChildren().add(UI.gameOver);
+        }
+        if (id == 2){BGM_and_SFX.stopBGM();
+            BGM_and_SFX.playGameWinning();
+            root.getChildren().add(UI.victory);
+        }
     }
 
     public static void resume() {

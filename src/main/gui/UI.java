@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import main.GameManagement;
+import main.audio.BGM_and_SFX;
 import main.graphics.Layer;
 import main.utils.Utils;
 
@@ -49,29 +50,52 @@ public class UI {
         sound.setId("soundButton");
         sound.setLayoutX(605);
         sound.setLayoutY(295);
+        sound.setOnAction(actionEvent -> {
+            if (sound.isSelected()) {
+                BGM_and_SFX.turnOffBGM();
+                BGM_and_SFX.pauseBGM();
+            }
+            else {
+                BGM_and_SFX.turnOnBGM();
+                BGM_and_SFX.resumeBGM();
+            }
+        });
+
+        ToggleButton sfx = new ToggleButton("\uD83D\uDD0A");
+        sfx.setId("SFXButton");
+        sfx.setLayoutX(705);
+        sfx.setLayoutY(295);
+        sfx.setOnAction(actionEvent -> {
+            if (sfx.isSelected()) {
+                BGM_and_SFX.turnOffSFX();
+            }
+            else {
+                BGM_and_SFX.turnOnSFX();
+            }
+        });
+
 
         Button resume = new Button("Resume");
         resume.setLayoutX(605);
         resume.setLayoutY(355);
-        resume.setOnAction(actionEvent -> {
-            GameManagement.resume();
-        });
+        resume.setOnAction(actionEvent -> GameManagement.resume());
 
         Button restart = new Button("Restart");
         restart.setLayoutX(605);
         restart.setLayoutY(405);
-        restart.setOnAction(actionEvent -> {
-            GameManagement.reset();
-        });
+        restart.setOnAction(actionEvent -> GameManagement.reset());
 
         Button mainMenu = new Button("Main menu");
         mainMenu.setLayoutX(605);
         mainMenu.setLayoutY(455);
         mainMenu.setOnAction(actionEvent -> {
+            BGM_and_SFX.stopBGM();
             GameManagement.exit();
         });
 
-        pause.getChildren().addAll(canvas, sound, resume, restart, mainMenu);
+
+
+        pause.getChildren().addAll(canvas, sfx, sound, resume, restart, mainMenu);
     }
 
     public static void initGameOver() {
@@ -85,14 +109,13 @@ public class UI {
         Button restart = new Button("Restart");
         restart.setLayoutX(605);
         restart.setLayoutY(405);
-        restart.setOnAction(actionEvent -> {
-            GameManagement.reset();
-        });
+        restart.setOnAction(actionEvent -> GameManagement.reset());
 
         Button mainMenu = new Button("Main menu");
         mainMenu.setLayoutX(605);
         mainMenu.setLayoutY(455);
         mainMenu.setOnAction(actionEvent -> {
+            BGM_and_SFX.stopBGM();
             GameManagement.exit();
         });
 
@@ -118,9 +141,7 @@ public class UI {
         Button mainMenu = new Button("Main menu");
         mainMenu.setLayoutX(605);
         mainMenu.setLayoutY(455);
-        mainMenu.setOnAction(actionEvent -> {
-            GameManagement.exit();
-        });
+        mainMenu.setOnAction(actionEvent -> GameManagement.exit());
 
         victory.getChildren().addAll(canvas, restart, mainMenu);
     }

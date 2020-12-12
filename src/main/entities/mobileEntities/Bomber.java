@@ -2,6 +2,7 @@ package main.entities.mobileEntities;
 
 import javafx.scene.image.Image;
 import main.GameManagement;
+import main.audio.BGM_and_SFX;
 import main.entities.Entity;
 import main.entities.bomb.Bomb;
 import main.entities.statusEffect.*;
@@ -69,6 +70,8 @@ public class Bomber extends AnimatedEntity {
             } else {
                 if (invulTime == 120) {
                     if (!isinvul) {
+                        BGM_and_SFX.stopGetHit();
+                        BGM_and_SFX.playGetHit();
                         lives--;
                     }
                 }
@@ -371,6 +374,8 @@ public class Bomber extends AnimatedEntity {
 
     public void pickUpPowerup() {
         if (GameManagement.getStaticEntityAt(x+16*1.6, y+16*1.6) instanceof StatusEffect) {
+            BGM_and_SFX.stopPowerUp();
+            BGM_and_SFX.playPowerUp();
             getStatusEffect((StatusEffect) GameManagement.getStaticEntityAt(x + 16 * 1.6, y + 16 * 1.6));
             GameManagement.getStaticEntityAt(x+1.6*16, y+1.6*16).kill();
         }

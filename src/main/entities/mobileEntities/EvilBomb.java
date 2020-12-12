@@ -63,7 +63,7 @@ public class EvilBomb extends Enemy{
                         Sprite.bomber_left_3, Sprite.bomber_left_4, get_animate(), 24);
             case 2: //right
                 return Sprite.getMoveSprite(Sprite.bomber_right_0, Sprite.bomber_right_1, Sprite.bomber_right_2,
-                        Sprite.bomber_right_3, Sprite.bomber_right_4, get_animate(), 24);
+                        Sprite.bomber_right_3, get_animate(), 24);
             case 3: //up
                 return Sprite.getMoveSprite(Sprite.bomber_up_0, Sprite.bomber_up_1, Sprite.bomber_up_2,
                         Sprite.bomber_up_3, Sprite.bomber_up_4, get_animate(), 24);

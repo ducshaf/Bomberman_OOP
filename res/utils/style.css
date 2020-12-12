@@ -64,3 +64,25 @@
 #pausePane > #soundButton:selected > .text {
     -fx-strikethrough: true;
 }
+
+
+#pausePane > #SFXButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-border-radius: 10px;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
+}
+
+#pausePane > #SFXButton:hover {
+    -fx-border-color: aliceblue;
+}
+
+#pausePane > #SFXButton:selected {
+    -fx-background-color: rgba(0,0,0,0.30);
+    -fx-background-radius: 10px;
+}
+#pausePane > #SFXButton:selected > .text {
+    -fx-strikethrough: true;
+}
