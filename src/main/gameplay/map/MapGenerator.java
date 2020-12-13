@@ -127,7 +127,7 @@ public class MapGenerator {
                         GameManagement.mobileEntities.add(new Slime(j, i, Sprite.player_up));
                         break;
                     case 4: // Advance mob
-                        GameManagement.entities.add(new Snow_element(j, i, null));
+                        GameManagement.mobileEntities.add(new Snow(j, i, null));
                         GameManagement.entities.add(new Grass(j, i, null));
                         break;
                     case 5: // Ghost
@@ -135,7 +135,7 @@ public class MapGenerator {
                         GameManagement.mobileEntities.add(new Ghost(j, i, Sprite.ghost_down_0));
                         break;
                     case 6: // Boss
-                        GameManagement.entities.add(new Grass(j, i, null));
+                        GameManagement.entities.add(new DestroyableWall(j, i, new Image("/box.png")));
                         break;
                     case 7: // AI Bomber?
                         GameManagement.mobileEntities.add(new EvilBomb(j, i, Sprite.player_up));

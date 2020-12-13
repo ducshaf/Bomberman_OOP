@@ -51,7 +51,7 @@ public abstract class Enemy extends AnimatedEntity {
 
         double tileOffsetX = Utils.getPreciseDouble(x / 1.6) % 32;
         double tileOffsetY = Utils.getPreciseDouble(y / 1.6) % 32;
-        if (tileOffsetX == 0 && tileOffsetY == 0.0 && !changeDirection) {
+        if (tileOffsetX == 0.0 && tileOffsetY == 0.0 && !changeDirection) {
             setDirection();
             changeDirection = true;
             return;

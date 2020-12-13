@@ -164,7 +164,7 @@ public class GameManagement {
         Layer.setGraphicsContext(gc);
         InputManager.keyboardHandle(s);
         // generate a random map.
-        MapGenerator.inputMap();
+        MapGenerator.generateMap();
         // start game loop.
         start();
     }
@@ -178,7 +178,8 @@ public class GameManagement {
 
             root.getChildren().add(UI.gameOver);
         }
-        if (id == 2){BGM_and_SFX.stopBGM();
+        if (id == 2){
+            BGM_and_SFX.stopBGM();
             BGM_and_SFX.playGameWinning();
             root.getChildren().add(UI.victory);
         }

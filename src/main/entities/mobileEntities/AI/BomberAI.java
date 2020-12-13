@@ -48,7 +48,13 @@ public class BomberAI {
             reachDes = false;
         } else if (!reachDes) {
             if (nextMove == null) {
-                setNextMove();
+                if (!path.isEmpty()) {
+                    setNextMove();
+                }
+            }
+
+            if (nextMove == null) {
+                enemy.killed();
             }
 
             double x = Utils.getPreciseDouble((nextMove.x + 2)*32*1.6);

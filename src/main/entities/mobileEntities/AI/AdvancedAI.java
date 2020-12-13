@@ -27,6 +27,7 @@ public class AdvancedAI extends AI {
     public AdvancedAI(Entity e) {
         super();
         enemy = e;
+        cooldown += GameManagement.mobileEntities.indexOf(enemy);
     }
 
     public int calculateDirection() {
@@ -49,6 +50,7 @@ public class AdvancedAI extends AI {
         if (reachable) {
             if (nextMove == null) {
                 setNextMove();
+                return 0;
             }
 
             double x = Utils.getPreciseDouble((nextMove.x + 2)*32*1.6);
@@ -59,8 +61,12 @@ public class AdvancedAI extends AI {
             if (enemy.getX() == x && enemy.getY() == y) {
                 if (!path.isEmpty()) {
                     setNextMove();
-                    return 0;
+
+                } else {
+                    cooldown = 5;
+                    reachable = false;
                 }
+                return 0;
             }
 
             if (enemy.getY() == y) {

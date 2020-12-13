@@ -1,13 +1,15 @@
 package main.entities.mobileEntities;
 
 import javafx.scene.image.Image;
-import main.entities.mobileEntities.AI.AI;
+import main.GameManagement;
+import main.entities.mobileEntities.AI.SimpleAI;
 import main.graphics.Sprite;
+import main.utils.Utils;
 
 import java.util.Random;
 
 public class Ghost extends Enemy {
-    private AI ghost = new AI();
+    private SimpleAI ghost = new SimpleAI();
     public Ghost(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img, 1.6);
     }
@@ -15,18 +17,14 @@ public class Ghost extends Enemy {
 
     @Override
     public boolean canMove(double xx, double yy) {
-        double xxa = Math.round(xx*100)/100.0, yya = Math.round(yy*100)/100.0;
-        if (direction == 1) {
-        }
+        double xxa = Utils.getPreciseDouble(xx), yya = Utils.getPreciseDouble(yy);
         if (direction == 2) {
             xxa += 32*1.6 - 0.1;
-        }
-        if (direction == 3) {
         }
         if (direction == 4) {
             yya += 32*1.6 - 0.1;
         }
-        if (xxa < 32*2*1.6 - 0.1 || xxa > 32*17*1.6 + 0.1 || yya < 32*3*1.6 - 0.1 || yya > 32*14*1.6 + 0.1) {
+        if (xxa < 32*2*1.6 + 1.6 || xxa > 32*17*1.6 + 0.1 || yya < 32*3*1.6 - 0.1 || yya > 32*14*1.6 + 0.1) {
             return false;
         }
         return true;
@@ -34,26 +32,11 @@ public class Ghost extends Enemy {
 
     @Override
     public void setDirection() {
-        direction = ghost.randomDirection();
-        if (teleportChance.nextInt(100) < 20) {
-            int teleportBound;
-            switch (direction) {
-                case 1:
-                    teleportBound = (int) x - 50*2;
-                    if (teleportBound > 0) x -= teleportChance.nextInt(teleportBound);
-                    break;
-                case 2:
-                    teleportBound = 17*50 - (int) x;
-                    if (teleportBound > 0) x += teleportChance.nextInt(teleportBound);
-                    break;
-                case 3:
-                    teleportBound = (int) x - 50*3;
-                    if (teleportBound > 0) y -= teleportChance.nextInt(teleportBound);
-                    break;
-                case 4:
-                    teleportBound = 14*50 - (int) x;
-                    if (teleportBound > 0) y += teleportChance.nextInt(teleportBound);
-            }
+        direction = ghost.calculateDirection();
+        if (teleportChance.nextInt(100) < 10) {
+            int teleport = teleportChance.nextInt(15*11);
+            x = GameManagement.entities.get(teleport).getX();
+            y = GameManagement.entities.get(teleport).getY();
         }
     }
 
