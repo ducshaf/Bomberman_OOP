@@ -165,6 +165,8 @@ public class GameManagement {
         InputManager.keyboardHandle(s);
         // generate a random map.
         MapGenerator.generateMap();
+        //generate map from txt file.
+        //MapGenerator.inputMap();
         // start game loop.
         start();
     }

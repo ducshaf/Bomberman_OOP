@@ -28,15 +28,13 @@ public class MapGenerator {
                 } else {
                     Random appearRate = new Random();
                     int rate = appearRate.nextInt(300);
-                    if (rate <= 40 && (i > 5 || j > 5)) { // 15 tile thì có 1 là mob
+                    if (rate <= 30 && (i > 5 || j > 5)) { // 15 tile thì có 1 là mob
                         if (rate <= 15) {
                             map[i][j] = 3;                  //set standard mob
-                        } else if (rate <= 25) {
+                        } else if (rate <= 20) {
                             map[i][j] = 4;                  // set advanced mob
-                        } else if (rate <= 30) {
+                        } else if (rate <= 25) {
                             map[i][j] = 5;                  // set ghost
-                        } else if (rate <= 35){
-                            map[i][j] = 6;                  // set boss monster
                         } else {
                             map[i][j] = 7;                  //set evil bomber
                         }

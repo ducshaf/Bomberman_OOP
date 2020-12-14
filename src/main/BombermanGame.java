@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import main.gui.App;
 import main.gui.UI;
@@ -23,6 +24,8 @@ public class BombermanGame extends Application {
         UI.init();
         App.init();
         primaryStage.setResizable(false);
+        primaryStage.setTitle("Bomberman");
+        primaryStage.getIcons().add(new Image("/GameIcon    .png"));
         primaryStage.show();
     }
 }

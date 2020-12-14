@@ -11,6 +11,7 @@ import main.entities.AnimatedEntity;
 import main.graphics.Sprite;
 import main.utils.Utils;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -373,9 +374,24 @@ public class Bomber extends AnimatedEntity {
     }
 
     public void pickUpPowerup() {
-        if (GameManagement.getStaticEntityAt(x+16*1.6, y+16*1.6) instanceof StatusEffect) {
-            BGM_and_SFX.stopPowerUp();
-            BGM_and_SFX.playPowerUp();
+        Entity powerup = GameManagement.getStaticEntityAt(x+16*1.6, y+16*1.6);
+        if (powerup instanceof StatusEffect) {
+            if (powerup instanceof TheForce) {
+                BGM_and_SFX.stopForce();
+                BGM_and_SFX.playForceAwaken();
+            } else if (powerup instanceof FreezeTime) {
+                BGM_and_SFX.stopZAWARUDO();
+                BGM_and_SFX.playZAWARUDO();
+            } else if (powerup instanceof TimeBomb) {
+                BGM_and_SFX.stopQueen1stbomb();
+                BGM_and_SFX.playQueen1stbomb();
+            } else if (powerup instanceof FierceBomb) {
+                BGM_and_SFX.stopQueen3rdbomb();
+                BGM_and_SFX.playQueen3rdbomb();
+            } else {
+                BGM_and_SFX.stopPowerUp();
+                BGM_and_SFX.playPowerUp();
+            }
             getStatusEffect((StatusEffect) GameManagement.getStaticEntityAt(x + 16 * 1.6, y + 16 * 1.6));
             GameManagement.getStaticEntityAt(x+1.6*16, y+1.6*16).kill();
         }
