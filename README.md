@@ -1,67 +1,76 @@
-# Bài tập lớn OOP - Bomberman Game
-
-Trong bài tập lớn này, nhiệm vụ của bạn là viết một phiên bản Java mô phỏng lại trò chơi [Bomberman](https://www.youtube.com/watch?v=mKIOVwqgSXM) kinh điển của NES.
-
-<img src="res/demo.png" alt="drawing" width="400"/>
-
-Bạn có thể sử dụng mã nguồn tại repository này để phát triển hoặc tự phát triển từ đầu.
-
-## Mô tả về các đối tượng trong trò chơi
-Nếu bạn đã từng chơi Bomberman, bạn sẽ cảm thấy quen thuộc với những đối tượng này. Chúng được được chia làm hai loại chính là nhóm đối tượng động (*Bomber*, *Enemy*, *Bomb*) và nhóm đối tượng tĩnh (*Grass*, *Wall*, *Brick*, *Door*, *Item*).
-
-*Hãy thiết kế hệ thống các đối tượng một cách phù hợp để tận dụng tối đa sức mạnh của OOP: tái sử dụng code, dễ dàng maintain.*
-
-- ![](res/sprites/player_down.png) *Bomber* là nhân vật chính của trò chơi. Bomber có thể di chuyển theo 4 hướng trái/phải/lên/xuống theo sự điều khiển của người chơi. 
-- ![](res/sprites/balloom_left1.png) *Enemy* là các đối tượng mà Bomber phải tiêu diệt hết để có thể qua Level. Enemy có thể di chuyển ngẫu nhiên hoặc tự đuổi theo Bomber tùy theo loại Enemy. Các loại Enemy sẽ được mô tả cụ thể ở phần dưới.
-- ![](res/sprites/bomb.png) *Bomb* là đối tượng mà Bomber sẽ đặt và kích hoạt tại các ô Grass. Khi đã được kích hoạt, Bomber và Enemy không thể di chuyển vào vị trí Bomb. Tuy nhiên ngay khi Bomber vừa đặt và kích hoạt Bomb tại ví trí của mình, Bomber có một lần được đi từ vị trí đặt Bomb ra vị trí bên cạnh. Sau khi kích hoạt 2s, Bomb sẽ tự nổ, các đối tượng *Flame* ![](res/sprites/explosion_horizontal.png) được tạo ra.
+# Bài tập lớn OOP - Bomberman Game 
+ENGLISH CAPTION BELOW!
 
 
-- ![](res/sprites/grass.png) *Grass* là đối tượng mà Bomber và Enemy có thể di chuyển xuyên qua, và cho phép đặt Bomb lên vị trí của nó
-- ![](res/sprites/wall.png) *Wall* là đối tượng cố định, không thể phá hủy bằng Bomb cũng như không thể đặt Bomb lên được, Bomber và Enemy không thể di chuyển vào đối tượng này
-- ![](res/sprites/brick.png) *Brick* là đối tượng được đặt lên các ô Grass, không cho phép đặt Bomb lên nhưng có thể bị phá hủy bởi Bomb được đặt gần đó. Bomber và Enemy thông thường không thể di chuyển vào vị trí Brick khi nó chưa bị phá hủy.
+ENTITY
+- Animated Entity
+   + Enemy có 4 loại:
+      Ghost có thể đi xuyên tường, AI randomDirection, có khả năng dịch chuyển sang 1 tile bất kì trong bản đồ.
+      Evil Bomb sử dụng hàm A* (tính cả Destroyable Wall) để tính đường ngắn nhất đên player, khi gặp DestoyableWall sẽ đặt bom, dùng hàm findSafePlace (dijkstra's algorithm) để         tìm tile gần nhất an toàn, dùng A* để tìm đường đến đó. Nếu Evil bomb đến cột hoặc dòng cùng player thì tự nổ tung (fierce bomb).
+      Slime di chuyển bằng A*(k tính DestroyableWall) để tìm đường đến player, nếu k thể đến được thì di chuyển bằng randomDirection.
+      Snow di chuyển ngẫu nhiên bằng randomDirection.
+   + Bomber
+   + Bomb & Explosion
+      Ấn H để đặt bom.
+      Trong bomb có các hàm để di chuyển khi sử dụng powerup The force, nổ hẹn giờ khi dùng TimeBomb, nổ vượt tất cả DestroyableWall khi dùng FierceBomb.
+      Bom nổ sau 2.5s, k có animation cho Bomb và Explosion.
+      
+    Va chạm dùng canMove, và dùng 2 mảng entities, 1 mảng entities để Grass, DestroyableWall, Wall, 1 mảng mobileEntities để AnimatedEntity
+- StatusEffect
+   + Agile: tăng tốc độ di chuyển của player, mặc định 0.8 (hiển thị 8) mỗi lần ăn tăng 0.1.
+   + Blind: Tạo 1 overlay đen để làm mù, vẫn gặp bug khi gameover lúc có debuff này.
+   + FierceBomb: bomb nổ vượt qua DestroyableWall, bomblevel = 15.
+   + FreezeTime: dừng thời gian, player vẫn có thể di chuyển.
+   + Heal: tăng máu nếu máu thấp hơn 3.
+   + IncrementBombLevel: tăng phạm vi nổ bom.
+   + IncrementBombNumber: tăng số bom có thể đặt.
+   + Inversion: đảo chiều điều khiển của người chơi.
+   + Percolate: lưu vị trí hiện tại của người chơi. Nếu đến cuối thời gian người chơi vẫn trong tường thì quay lại vị trí đã lưu.
+   + Random: 1 status effect random.
+   + Slow: làm chậm tốc độ của player xuống 0.5.
+   + TimeBomb: bom hẹn giờ, ấn K để nổ.
+   
+MAP
+- hàm generateMap để tạo 1 map random, đặt vị trí của player, Wall và random Enemy.
+- hàm inputMap để lấy map từ file Level1.txt, chủ yếu dùng để debug.
+
+GRAPHICS lấy từ openart, dùng Tiled để tạo ground map, overlay, rồi chuyển qua png. Sprite từ openart, tự vẽ.
+
+GUI
+Pause tạm dừng trò chơi, ấn Resume hoặc ngoài để tiếp tục
+Main Menu chuyển về scene App
+Restart khởi động lại màn
+
+AUDIO bgm là うちのまじっく từ Dova-syndrome(royalty free, tks Hololive), sfx từ nhiều nguồn.
+
+1 số bug vẫn hiện hữu như có khả năng (rất nhỏ) Snow đi xuyên tường, khi bị Blind hay đang có FreezeTime mà game over hoặc win thì k xóa đc cái overlay đó.
 
 
-- ![](res/sprites/portal.png) *Portal* là đối tượng được giấu phía sau một đối tượng Brick. Khi Brick đó bị phá hủy, Portal sẽ hiện ra và nếu tất cả Enemy đã bị tiêu diệt thì người chơi có thể qua Level khác bằng cách di chuyển vào vị trí của Portal.
+[ENGLISH]
+This is my little project for OOP class in UET-VNU.I'm heavily influenced (inheritance, polymorphism and some methods) by carlosflorencio and ashish2199's projects
+This project still has a lot of shortcomings so advice are welcome :D. If this violate any copyright or you just don't like it, contact me through htduc1n@gmail.com
+then I will private this.
 
-Các *Item* cũng được giấu phía sau Brick và chỉ hiện ra khi Brick bị phá hủy. Bomber có thể sử dụng Item bằng cách di chuyển vào vị trí của Item. Thông tin về chức năng của các Item được liệt kê như dưới đây:
-- ![](res/sprites/powerup_speed.png) *SpeedItem* Khi sử dụng Item này, Bomber sẽ được tăng vận tốc di chuyển thêm một giá trị thích hợp
-- ![](res/sprites/powerup_flames.png) *FlameItem* Item này giúp tăng phạm vi ảnh hưởng của Bomb khi nổ (độ dài các Flame lớn hơn)
-- ![](res/sprites/powerup_bombs.png) *BombItem* Thông thường, nếu không có đối tượng Bomb nào đang trong trạng thái kích hoạt, Bomber sẽ được đặt và kích hoạt duy nhất một đối tượng Bomb. Item này giúp tăng số lượng Bomb có thể đặt thêm một.
+Some main features:
+- Working Bomberman game with pause, resume, restart, bgm, sfx can be muted.
+- Generate map by randomly generating enemies then fill the rest with wall and destroyable wall, if you want to use text file instead, in init() method in GameManagement,
+replace with MapGenerator.inputMap(); edit map in Level1.txt
+- 4 different types of enemy with AI, used A* and dijkstra to find path and find node in map.
+- 12 status effect.
 
-Có nhiều loại Enemy trong Bomberman, tuy nhiên trong phiên bản này chỉ yêu cầu cài đặt hai loại Enemy dưới đây (nếu cài đặt thêm các loại khác sẽ được cộng thêm điểm):
-- ![](res/sprites/balloom_left1.png) *Balloom* là Enemy đơn giản nhất, di chuyển ngẫu nhiên với vận tốc cố định
-- ![](res/sprites/oneal_left1.png) *Oneal* có tốc độ di chuyển thay đổi, lúc nhanh, lúc chậm và di chuyển "thông minh" hơn so với Balloom (biết đuổi theo Bomber)
+Assets:
+- Most assets in this can be found on opengameart.org, bgm is from dova-syndrome, the rest are from multiple sources online or drawn by me.
+   Bomberman and wall sprites by drummyfish.
+   Enemy sprites by Elthen.
+   BGM is うちのまじっく by ハヤシユウ.
+Kudos to them for their amazing works.
 
-## Mô tả game play, xử lý va chạm và xử lý bom nổ
-- Trong một màn chơi, Bomber sẽ được người chơi di chuyển, đặt và kích hoạt Bomb với mục tiêu chính là tiêu diệt tất cả Enemy và tìm ra vị trí Portal để có thể qua màn mới
-- Bomber sẽ bị giết khi va chạm với Enemy hoặc thuộc phạm vi Bomb nổ. Lúc đấy trò chơi kết thúc.
-- Enemy bị tiêu diệt khi thuộc phạm vi Bomb nổ
-- Một đối tượng thuộc phạm vi Bomb nổ có nghĩa là đối tượng đó va chạm với một trong các tia lửa được tạo ra tại thời điểm một đối tượng Bomb nổ.
+Future development(?):
+I might work some more on this when I have time. For example improving collision by using 2D rectangle as bounding box, create more enemy, add more map, support LAN,
+fixing some bugs,...
+-> Any advice would be appreciated!
 
-- Khi Bomb nổ, một Flame trung tâm![](res/sprites/bomb_exploded.png) tại vị trí Bomb nổ và bốn Flame tại bốn vị trí ô đơn vị xung quanh vị trí của Bomb xuất hiện theo bốn hướng trên![](res/sprites/explosion_vertical.png)/dưới![](res/sprites/explosion_vertical.png)/trái![](res/sprites/explosion_horizontal.png)/phải![](res/sprites/explosion_horizontal.png). Độ dài bốn Flame xung quanh mặc định là 1 đơn vị, được tăng lên khi Bomber sử dụng các FlameItem.
-- Khi các Flame xuất hiện, nếu có một đối tượng thuộc loại Brick/Wall nằm trên vị trí một trong các Flame thì độ dài Flame đó sẽ được giảm đi để sao cho Flame chỉ xuất hiện đến vị trí đối tượng Brick/Wall theo hướng xuất hiện. Lúc đó chỉ có đối tượng Brick/Wall bị ảnh hưởng bởi Flame, các đối tượng tiếp theo không bị ảnh hưởng. Còn nếu vật cản Flame là một đối tượng Bomb khác thì đối tượng Bomb đó cũng sẽ nổ ngay lập tức.
 
-## Mô tả starter project
-Xem comment ở starter project
 
-## Yêu cầu chung
-- Có thể chơi được ít nhất cho một màn chơi (chiến thắng một màn chơi)
-- Có thể thay đổi được tệp cấu hình khác cho màn chơi (tương tự mẫu cho trước)
 
-## Nhiệm vụ của bạn
-- Gói bắt buộc (+8đ)
-1. Thiết kế cây thừa kế cho các đối tượng game +2đ
-2. Xây dựng bản đồ màn chơi từ tệp cấu hình (có mẫu tệp cấu hình, xem [tại đây](https://raw.githubusercontent.com/bqcuong/bomberman-starter/starter-2/res/levels/Level1.txt)) +1đ
-3. Di chuyển Bomber theo sự điều khiển từ người chơi +1đ
-4. Tự động di chuyển các Enemy +1đ
-5. Xử lý va chạm cho các đối tượng Bomber, Enemy, Wall, Brick, Bomb +1đ
-6. Xử lý bom nổ +1đ
-7. Xử lý khi Bomber sử dụng các Item và khi đi vào vị trí Portal +1đ
 
-- Gói tùy chọn (tối đa +2đ)
-1. Nâng cấp thuật toán tìm đường cho Enemy +0.5đ
-   Cài đặt thêm các loại Enemy khác: +0.25đ cho mỗi loại main.entities.mobileEntities.mob
-2. Cài đặt thuật toán AI cho Bomber (tự chơi) +1đ
-3. Xử lý hiệu ứng âm thanh (thêm music & sound effects) +1đ
-4. Phát triển hệ thống server-client để nhiều người có thể cùng chơi qua mạng LAN hoặc Internet +1đ
-5. Những ý tưởng khác sẽ được đánh giá và cộng điểm theo mức tương ứng
